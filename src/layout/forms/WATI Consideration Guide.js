@@ -33,15 +33,10 @@ export const schema = [
                                 editable: true,
                             }
                       ]
-            }
-        }
-    },
-    {
-        type: "object",
-        title: " ",
-        properties: {
+            },
             question: {type: "paragraph", span: 24, description: "5. Are there assistive technology services (more specific evaluation of need for assistive technology, adapting or modifying the assistive technology, technical assistance on its operation or use, or training of student, staff, or family) that this student needs? If yes, describe what will be provided, the initiation and duration. "},
             _:{"type":"long string", span:24},
+            "Persons Present": {"type":"string", span:18}, "Date": {type:"date", span:6}
 
         }
     }
@@ -82,14 +77,9 @@ export const formData = [
         key: 0,
         data: 
         [
-            "test_name", "xxx primary school", null, tableData
-        ]
-    },
-    {
-        key:2,
-        data:
-        [
+            "test_name", "xxx primary school", null, tableData,
             "", "Mauris sodales eget elit eu viverra. Sed nec porta lectus. Morbi tristique odio at odio venenatis dignissim. Pellentesque ut neque vitae ex varius auctor. Maecenas efficitur nec diam a maximus. Phasellus id libero pellentesque, tincidunt erat ac, facilisis enim. Cras convallis maximus ante, quis tincidunt tortor imperdiet ut. Curabitur aliquet justo felis, non pellentesque purus laoreet non. Praesent dapibus, urna vitae sodales egestas, dolor nibh consectetur felis, a gravida ex elit a purus. Quisque dui diam, convallis ac nulla sagittis, varius ultrices purus. "
+
         ]
     }
 ]

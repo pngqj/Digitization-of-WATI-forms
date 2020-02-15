@@ -1,5 +1,6 @@
-import { Table, Input, InputNumber, Popconfirm, Form, message, Modal } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, message, Modal, DatePicker, Button } from 'antd';
 import React from 'react';
+import * as constants from '../Constants'
 const EditableContext = React.createContext();
 
 const { TextArea } = Input;
@@ -9,6 +10,8 @@ class EditableCell extends React.Component {
   getInput = () => {
     if (this.props.inputType === 'number') {
       return <InputNumber />;
+    } else if (this.props.inputType === 'date'){
+      return <DatePicker format={constants.dateFormat}></DatePicker>
     }
     return <TextArea placeholder="Input your data" autosize={{minRows:4}}/>;
   };
@@ -66,6 +69,9 @@ class EditableTable extends React.Component {
             render: (text, record) => {
               const { editingKey } = this.state;
               const editable = this.isEditing(record);
+              if(record.enabled === undefined){
+                record.enabled = true
+              }
               return editable ? (
                 <span>
                   <EditableContext.Consumer>
@@ -84,9 +90,14 @@ class EditableTable extends React.Component {
                 </span>
               ) : record.enabled ? 
               (
-                <a disabled={editingKey !== ''} onClick={() => this.edit(record.key)}>
-                  Edit
-                </a>
+                <span>
+                  <a disabled={editingKey !== ''} onClick={() => this.edit(record.key)}>
+                    Edit 
+                  </a>
+                  <Popconfirm title="Confirm Delete?" onConfirm={() => this.deleteRow(record.key)}>
+                    <a> Delete</a>
+                  </Popconfirm>
+                </span>
               )
               :
               ''
@@ -98,8 +109,12 @@ class EditableTable extends React.Component {
       if(columns[c].title !== "operation"){
         columns[c].render = (value, row, index) => {
           let cell = null
-          if(!value.includes("\n")){
-            cell = (<span style={{fontSize:this.props.fontSize}}>{value}</span>)
+          if(typeof value !== "string" || !value.includes("\n")){
+            try{
+              cell = (<span style={{fontSize:this.props.fontSize}}>{value.format(constants.dateFormat)}</span>)
+            }catch{
+              cell = (<span style={{fontSize:this.props.fontSize}}>{value}</span>)
+            }
           } else{
             let splited = value.split("\n")
             let v = []
@@ -108,7 +123,7 @@ class EditableTable extends React.Component {
             }
             cell =  (<div>{v}</div>)
           }
-          let color = row.enabled? "#ffffff" : '#dddddd'
+          let color = this.props.needAddButton? "#ffffff" : row.enabled? "#ffffff" : '#dddddd'
           return {props: {style: { background: color },},children: cell,};
         }
         columns[c].width = (100 / columns.length).toString() + "%"
@@ -151,6 +166,38 @@ class EditableTable extends React.Component {
     });
   }
 
+  addRow = () => {
+    const data = this.state.data;
+    const newData = {key: data.length};
+
+    for(let c in this.columns){
+      newData[c.dataIndex] = ""
+    }
+    
+
+    this.setState({
+      data: [...data, newData],
+    });
+    let formNo = this.props.formNo
+    let formDataNo = this.props.formDataNo
+    this.props.saveTableData(formNo, formDataNo, [...data, newData])
+  };
+
+  deleteRow = (key)  => {
+    console.log(key)
+    const data = this.state.data;
+    data.splice(key,1);
+
+    for (let d = 0; d < data.length; d++){
+      data[d].key = d
+    }    
+
+    this.setState({data: data});
+    let formNo = this.props.formNo
+    let formDataNo = this.props.formDataNo
+    this.props.saveTableData(formNo, formDataNo, data)
+  }
+
   edit(key) {
     this.setState({ editingKey: key });
   }
@@ -187,7 +234,7 @@ class EditableTable extends React.Component {
         ...col,
         onCell: record => ({
           record,
-          inputType: col.dataIndex === 'age' ? 'number' : 'text',
+          inputType: col.inputType,
           dataIndex: col.dataIndex,
           title: col.title,
           editing: this.isEditing(record),
@@ -239,6 +286,12 @@ class EditableTable extends React.Component {
           pagination= {{position : "none",pageSize:100}}
         />
       </EditableContext.Provider>
+      {
+        !this.props.isPDF && this.props.needAddButton?
+        <Button style={{width:"100%"}} type={"primary"} onClick={()=> this.addRow()}>Add Row</Button>
+        :
+        ''
+      }
       </div>
     );
   }
