@@ -1,4 +1,4 @@
-import { Table, Input, InputNumber, Popconfirm, Form, message, Modal, DatePicker, Button } from 'antd';
+import { Checkbox, Table, Input, InputNumber, Popconfirm, Form, message, Modal, DatePicker, Button } from 'antd';
 import React from 'react';
 import * as constants from '../Constants'
 const EditableContext = React.createContext();
@@ -12,6 +12,8 @@ class EditableCell extends React.Component {
       return <InputNumber />;
     } else if (this.props.inputType === 'date'){
       return <DatePicker format={constants.dateFormat}></DatePicker>
+    } else if (this.props.inputType === 'boolean'){
+      return <Checkbox></Checkbox>
     }
     return <TextArea placeholder="Input your data" autosize={{minRows:4}}/>;
   };
@@ -29,15 +31,23 @@ class EditableCell extends React.Component {
     } = this.props;
     return (
       <td {...restProps}>
-        {editing ? (
-          <Form.Item style={{ margin: 0 }}>
+        {!editing ? 
+          (children)
+          :
+          this.props.inputType === 'boolean'?
+          (<Form.Item style={{ margin: 0 }}>
+            {getFieldDecorator(dataIndex, {
+              initialValue: record[dataIndex],
+              valuePropName: 'checked'
+            })(this.getInput())}
+          </Form.Item>) 
+          :
+          (<Form.Item style={{ margin: 0 }}>
             {getFieldDecorator(dataIndex, {
               initialValue: record[dataIndex],
             })(this.getInput())}
-          </Form.Item>
-        ) : (
-          children
-        )}
+          </Form.Item>) 
+        }
       </td>
     );
   };
@@ -94,9 +104,14 @@ class EditableTable extends React.Component {
                   <a disabled={editingKey !== ''} onClick={() => this.edit(record.key)}>
                     Edit 
                   </a>
-                  <Popconfirm title="Confirm Delete?" onConfirm={() => this.deleteRow(record.key)}>
-                    <a> Delete</a>
-                  </Popconfirm>
+                  {
+                    this.props.needAddButton?
+                      <Popconfirm title="Confirm Delete?" onConfirm={() => this.deleteRow(record.key)}>
+                        <a> Delete</a>
+                      </Popconfirm>
+                    :
+                      ''
+                  }
                 </span>
               )
               :
@@ -109,7 +124,9 @@ class EditableTable extends React.Component {
       if(columns[c].title !== "operation"){
         columns[c].render = (value, row, index) => {
           let cell = null
-          if(typeof value !== "string" || !value.includes("\n")){
+          if(typeof value === "boolean"){
+            cell =  (<Checkbox checked={value}/>)
+          } else if(typeof value !== "string" || !value.includes("\n")){//if value is date
             try{
               cell = (<span style={{fontSize:this.props.fontSize}}>{value.format(constants.dateFormat)}</span>)
             }catch{

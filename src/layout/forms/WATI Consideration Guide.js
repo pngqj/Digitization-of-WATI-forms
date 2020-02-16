@@ -2,7 +2,7 @@
 
 export const schema = [
     { 
-        title:"sample",
+        title:"",
         "properties": 
         {
             "Student's Name":{"type":"string", span:12}, 

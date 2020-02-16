@@ -19,11 +19,11 @@ const main_schema = [
         title:"Student's Particulars", 
         "properties": 
         {
-            "Student's Name":{"type":"string", span:12}, "Date Of Birth":{type:"date", span:6}, "Age":{"type":"integer",span:6}, 
+            "Student's Name":{"type":"string", span:12}, "Date Of Birth":{type:"date", span:6}, "Age":{"type":"string",span:6, "integer":true}, 
             "School":{"type":"string", span:12}, "Grade":{"type":"string", span:12}, 
-            "School Contact Person":{"type":"string", span:12}, "Phone":{"type":"integer",span:12}, 
+            "School Contact Person":{"type":"string", span:12}, "Phone":{"type":"string",span:12, "integer":true}, 
             "Person Completing Guide":{"type":"string", span:12},"Guide Completion Date":{type:"date", span:12}, 
-            "Parent(s) Name":{"type":"string", span:15},"Parent(s) Phone":{"type":"integer",span:9}, 
+            "Parent(s) Name":{"type":"string", span:15},"Parent(s) Phone":{"type":"string",span:9, "integer":true}, 
             "Address":{"type":"string", span:24}, 
             "Student's Primary Language":{"type":"string", span:12},"Family's Primary Language":{"type":"string", span:12}
         }
@@ -244,7 +244,7 @@ const main_formData = [
         key:6,
         data:
         [
-            null,"",null,true,false,false,false,false,false,false,false,false,false,false,false,false
+            null,"",null,false,false,false,false,false,false,true,false,false,false,false,false,false
         ]
     }
 ]
@@ -253,7 +253,6 @@ const addSectionNo = (schema, no) => {
     for(let i in schema){
         schema[i]['section'] = no
     }
-    console.log(schema)
     return schema
 }
 

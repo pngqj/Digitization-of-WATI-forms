@@ -59,7 +59,8 @@ export const schema= [
         title:"Size of Grid Student Is Able to Access", 
         "properties": 
         {
-            "What is the smallest square the student can accurately access?":{type:"select", span:12, options:["1\"","2\"","3\"","4\""]},
+            "What is the smallest square the student can accurately access?":{type:"select", span:13, options:["1\"","2\"","3\"","4\""]},
+            paragraph1: {type: "paragraph", span: 24, description: "What is the optimal size grid?"},
             "table 1":{"type":"table", span:24, title: " ", needCheckBox:false, needAddButton:false, 
                       "columns": [
                             {
@@ -88,7 +89,28 @@ export const schema= [
         title:"Scanning", 
         "properties": 
         {
-            "If student cannot direct select, does the student use scanning?": {type:"switch"}
+            "If student cannot direct select, does the student use scanning?": 
+            {type:"switch", "properties":
+                {
+                    "Step":{type:"boolean",span:12},"Automatic":{type:"boolean",span:12},"Inverse":{type:"boolean",span:12},
+                    "Other":{"type":"boolean string", span:24}, 
+                }
+            },
+            "Preferred control site (body site)":{"type":"string", span:24}, 
+            "Other possible control sites":{"type":"string", span:24}, 
+        }
+    },
+    {
+        title:"Type of Switch", 
+        "properties": 
+        {
+            "Touch (jellybean)":{type:"boolean",span:6},"Light touch":{type:"boolean",span:6},"Wobble":{type:"boolean",span:6},"Rocker":{type:"boolean",span:6},
+            "Joystick":{type:"boolean",span:6},"Lever":{type:"boolean",span:6},"Head switch":{type:"boolean",span:6}," Mercury (tilt)":{type:"boolean",span:6},
+            "Arm slot":{type:"boolean",span:6},"Eye brow":{type:"boolean",span:6},"Tongue":{type:"boolean",span:6},"Sip/puff":{type:"boolean",span:6},
+            "Tread":{type:"boolean",span:6},"Other":{"type":"boolean string", span:24}, 
+            question1: {type: "paragraph", span: 24, description: "Summary of Student’s Abilities and Concerns Related to Computer/Device Access"},
+            _:{type:"long string",span:24},
+
         }
     },
 ]
@@ -136,14 +158,14 @@ export const formData =[
         key:5,
         data:
         [
-            false,false,false,true,"",null,""
+            false,false,false,false,"",null,""
         ]
     },
     {
         key:6,
         data:
         [
-            "", 
+            "", null,
              [
                 {
                     key: 0,
@@ -156,6 +178,16 @@ export const formData =[
     },
     {
         key:7,
-        data: true
+        data: [[true,true,false,""], "", ""]
+    },
+    {
+        key:8,
+        data:
+        [
+            false,false,false,false,false,false,false,false,false,false,false,false,false,
+            "",
+            null,
+            ""
+        ]
     }
 ]
