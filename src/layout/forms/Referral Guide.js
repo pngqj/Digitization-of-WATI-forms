@@ -133,7 +133,7 @@ const main_schema = [
         "properties": 
         {
             question1: {type: "paragraph", span: 24, description: "What task(s) does the student need to do that is currently difficult or impossible, and for which assistive technology may be an option?"},
-            _:{type:"long string",span:24},
+            _:{type:"string",span:24, long:true},
             question2: {type: "paragraph", span: 24, description: "Based on the referral question, select the sections of the Student Information Guide to be completed. (Check all that apply.)"},
             "Section 1 Fine Motor Related to Computer or Device Access":{type:"boolean section",span:12, section:1},
             "Section 8 Recreation and Leisure":{type:"boolean section",span:12, section:8},
@@ -244,7 +244,7 @@ const main_formData = [
         key:6,
         data:
         [
-            null,"",null,false,false,false,false,false,false,true,false,false,false,false,false,false
+            null,"",null,false,false,false,false,false,false,false,true,false,false,false,false,false
         ]
     }
 ]
@@ -315,34 +315,3 @@ temp_schema = temp_schema.concat([{section:13 ,heading:"Section 13:  General"}])
 temp_schema = temp_schema.concat(schema13);
 
 export const schema = temp_schema 
-
-
-let temp_formData = main_formData
-temp_formData = temp_formData.concat([{key:null, data:[]}]);
-temp_formData = temp_formData.concat(section1.formData);
-temp_formData = temp_formData.concat([{key:null, data:[]}]);
-temp_formData = temp_formData.concat(section2.formData);
-temp_formData = temp_formData.concat([{key:null, data:[]}]);
-temp_formData = temp_formData.concat(section3.formData);
-temp_formData = temp_formData.concat([{key:null, data:[]}]);
-temp_formData = temp_formData.concat(section4.formData);
-temp_formData = temp_formData.concat([{key:null, data:[]}]);
-temp_formData = temp_formData.concat(section5.formData);
-temp_formData = temp_formData.concat([{key:null, data:[]}]);
-temp_formData = temp_formData.concat(section6.formData);
-temp_formData = temp_formData.concat([{key:null, data:[]}]);
-temp_formData = temp_formData.concat(section7.formData);
-temp_formData = temp_formData.concat([{key:null, data:[]}]);
-temp_formData = temp_formData.concat(section8.formData);
-temp_formData = temp_formData.concat([{key:null, data:[]}]);
-temp_formData = temp_formData.concat(section9.formData);
-temp_formData = temp_formData.concat([{key:null, data:[]}]);
-temp_formData = temp_formData.concat(section10.formData);
-temp_formData = temp_formData.concat([{key:null, data:[]}]);
-temp_formData = temp_formData.concat(section11.formData);
-temp_formData = temp_formData.concat([{key:null, data:[]}]);
-temp_formData = temp_formData.concat(section12.formData);
-temp_formData = temp_formData.concat([{key:null, data:[]}]);
-temp_formData = temp_formData.concat(section13.formData);
-
-export const formData = temp_formData

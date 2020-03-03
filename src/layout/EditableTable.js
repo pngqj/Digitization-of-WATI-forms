@@ -14,8 +14,11 @@ class EditableCell extends React.Component {
       return <DatePicker format={constants.dateFormat}></DatePicker>
     } else if (this.props.inputType === 'boolean'){
       return <Checkbox></Checkbox>
+    } else {
+      let minRows = this.props.minRows === undefined ? 4 : this.props.minRows
+      return <TextArea placeholder="Input your data" autosize={{minRows:minRows}}/>;
     }
-    return <TextArea placeholder="Input your data" autosize={{minRows:4}}/>;
+    
   };
 
   renderCell = ({ getFieldDecorator }) => {
@@ -27,6 +30,7 @@ class EditableCell extends React.Component {
       record,
       index,
       children,
+      minRows,
       ...restProps
     } = this.props;
     return (
@@ -124,7 +128,9 @@ class EditableTable extends React.Component {
       if(columns[c].title !== "operation"){
         columns[c].render = (value, row, index) => {
           let cell = null
-          if(typeof value === "boolean"){
+          if (columns[c].isHTML){
+            cell = (<div dangerouslySetInnerHTML={{__html: value}}></div>)
+          } else if(typeof value === "boolean"){
             cell =  (<Checkbox checked={value}/>)
           } else if(typeof value !== "string" || !value.includes("\n")){//if value is date
             try{
@@ -143,7 +149,7 @@ class EditableTable extends React.Component {
           let color = this.props.needAddButton? "#ffffff" : row.enabled? "#ffffff" : '#dddddd'
           return {props: {style: { background: color },},children: cell,};
         }
-        columns[c].width = (100 / columns.length).toString() + "%"
+        // columns[c].width = (100 / columns.length).toString() + "%"
       }
       
       columns[c].title = <span style={{fontSize:this.props.fontSize}}>{columns[c].title}</span>
@@ -201,7 +207,6 @@ class EditableTable extends React.Component {
   };
 
   deleteRow = (key)  => {
-    console.log(key)
     const data = this.state.data;
     data.splice(key,1);
 
@@ -226,7 +231,11 @@ class EditableTable extends React.Component {
       for(let d in record){
         if( d !== "key" &&   d !== "colheader" && 
           d !== "enabled" &&   d !== "render"){
-            record[d] = ""
+            if (typeof  record[d] !== "boolean"){
+              record[d] = ""
+            } else{
+              record[d] = false
+            }
         }
       }
     }
@@ -253,6 +262,7 @@ class EditableTable extends React.Component {
           record,
           inputType: col.inputType,
           dataIndex: col.dataIndex,
+          minRows: col.minRows,
           title: col.title,
           editing: this.isEditing(record),
           render: col.render
@@ -270,7 +280,10 @@ class EditableTable extends React.Component {
             if( d !== "key" &&   d !== "colheader" && 
               d !== "enabled" &&   d !== "render"){
                 //if record not empty
-                if(record[d] !== ""){
+                let stringNotEmpty = record[d] !== "" && typeof record[d] === "string"
+                let booleanNotEmpty = record[d] !== false && typeof record[d] === "boolean"
+
+                if(stringNotEmpty || booleanNotEmpty){
                   this.setState({
                     confirmDeleteModalVisible:true,
                     recordToDelete: record

@@ -68,7 +68,7 @@ export const schema= [
         "properties": 
         {
             question1: {type: "paragraph", span: 24, description: "Summary of Student’s Abilities and Concerns Related to Writing"},
-            _:{type:"long string",span:24},
+            _:{type:"string",span:24, long:true},
         }
     }
 

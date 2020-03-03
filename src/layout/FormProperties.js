@@ -65,11 +65,15 @@ class FormProperties{
             if (type === "string"){
                 const formDataNo_copy = formDataNo
                 let string_type = this.properties[props].integer === true? "number": ""
-                forms.push(<Input type={string_type} onChange={(e)=>inputOnChange(e, formDataNo_copy, this.formNo, undefined)} key={key} style={style} size={this.size} addonBefore={title} defaultValue={data}/>)
-            } else if (type === "long string"){
-                const formDataNo_copy = formDataNo
-                forms.push(<TextArea onChange={(e)=>inputOnChange(e, formDataNo_copy, this.formNo, undefined)} key={key} style={style} size={this.size} rows={4} defaultValue={data}/>)
-            } else if (type === "paragraph"){
+                let is_long = this.properties[props].long === true
+                let after = this.properties[props].after
+
+                if(!is_long){
+                    forms.push(<Input addonBefore={title} addonAfter={after} type={string_type} onChange={(e)=>inputOnChange(e, formDataNo_copy, this.formNo, undefined)} key={key} style={style} size={this.size} defaultValue={data}/>)
+                } else{
+                    forms.push(<TextArea onChange={(e)=>inputOnChange(e, formDataNo_copy, this.formNo, undefined)} key={key} style={style} size={this.size} rows={4} defaultValue={data}/>)
+                }
+            }  else if (type === "paragraph"){
                 forms.push(<List 
                             key={key}
                             bordered={false}
@@ -111,11 +115,35 @@ class FormProperties{
                 const formDataNo_copy = formDataNo
                 let boolean_checked = state.boolean_checked
                 let checked = boolean_checked[key]
-                let string_type = this.properties[props].integer === true? "number": ""
+                let string_type = this.properties[props].integer === true? "number": ""                
     
                 if(this.properties[props].is_TextArea === undefined || this.properties[props].is_TextArea === false){
                     let inputSpan =     span === 24? "97%"  : span === 12? "88%"    : "85% " //8
                     let checkboxSpan =  span === 24? "3%"   : span === 12? "6%"     : "12% " //8
+                    let after = this.properties[props].after
+                    let multiple = this.properties[props].multiple
+                    let input = null
+                    if (multiple === undefined){
+                        input = (<Input type={string_type} addonBefore={title + ": "} addonAfter={after} disabled={!checked} onChange={(e)=>inputOnChange(e, formDataNo_copy, this.formNo, undefined)} 
+                        style={{width:inputSpan}} defaultValue={data} size={this.size}></Input>)
+                    } else{
+                        let multiLength = this.properties[props].multiLength
+                        inputSpan = span === 24? 97  : span === 12? 88 : 85 //8
+                        after = multiple[0]
+                        input = [(<Input type={string_type} addonBefore={title + ": "} addonAfter={after} disabled={!checked} onChange={(e)=>inputOnChange(e, formDataNo_copy, this.formNo, undefined)} 
+                            style={{width:(inputSpan * multiLength[0]).toString() + "%"}} defaultValue={data} size={this.size}></Input>)]
+                        for (let m in multiple){
+                            if (m === "0") {
+                                continue
+                            }
+                            input.push(
+                                (<Input type={string_type} addonAfter={multiple[m]} disabled={!checked} onChange={(e)=>inputOnChange(e, formDataNo_copy, this.formNo, undefined)} 
+                            style={{width:(inputSpan * multiLength[parseInt(m)]).toString() + "%"}} defaultValue={data} size={this.size}></Input>)
+                            )
+                        }
+                    }
+                    
+
                     tagGroup.push(
                         {
                             span: span,
@@ -124,8 +152,7 @@ class FormProperties{
                                         defaultChecked={checked} 
                                         value={key}
                                         style={{fontSize:this.fontSize, width:checkboxSpan}}/>
-                                    <Input type={string_type} addonBefore={title + ": "} disabled={!checked} onChange={(e)=>inputOnChange(e, formDataNo_copy, this.formNo, undefined)} 
-                                        style={{width:inputSpan}} defaultValue={data} size={this.size}></Input>
+                                    {input}
                                 </Col> 
                         }
                                           
@@ -197,24 +224,29 @@ class FormProperties{
                 if(this.isPDF){
                     forms.push(<Input  addonBefore={title} value={data} size={this.size} key={key} style={style} />)
                 }else{
+                    let heading = (<span class="ant-input-group-addon" style={{fontSize:this.fontSize}}>
+                                    {title}
+                                </span>)
+                    
+                    // if (checkbox === true){
+                    //     heading = (<Checkbox>{title}</Checkbox>)
+                    // }
+
                     forms.push(
-                        <div>
-                            <Row>
-                                <Col span={span}>
-                                    <TextArea autosize disabled={true} showArrow={false} value={title} style={{resize:"none", color:"#757575", backgroundColor:"#fafafa"}}/>
-                                </Col>
-                                <Col span={24-span}>
-                                    <Select
+                        <div style={{width:width_percent, display:"inline-block"}} >
+                            <span class="ant-input-group ant-input-group-large">
+                                {heading}
+                                <Select
+                                    class="ant-select ant-select-selection ant-input-group"
+                                    size={this.size}
                                     labelInValue
                                     defaultValue={{ key: data }}
-                                    style={{fontSize:this.fontSize, overflow: "auto", width:"100%"}}
+                                    style={{fontSize:this.fontSize, width:"100%"}}
                                     onChange={(value) => this.formData[formNo_copy].data[formDataNo_copy] = value.label}
                                     >
                                     {options}
                                 </Select>
-                                </Col>
-                            </Row>
-                             <br/>
+                            </span>
                         </div>
                     )
                 }
@@ -263,30 +295,59 @@ class FormProperties{
                     } else if(sub_type=== "string"){
                         const dataNo = i
                         const bs_key = data[i] === "" && !boolean_checked[key]? key + "empty": key
-                        let width = (sub_properties[sub_name].span * 100 / 24).toString() + "%"
-                        let sub_type = sub_properties[sub_name].integer? "number":""
-                        booleanString.push(
-                            <Input disabled={!checked} addonBefore={sub_name} onChange={(e)=>inputOnChange(e, formDataNo_copy, this.formNo, dataNo)} 
-                                type={sub_type} key={bs_key} style={{marginBottom:10,width:width}} defaultValue={data[i]} size={this.size}></Input>
-                        )
+                        let width = (sub_properties[sub_name].span * 100 / 24)
+                        let sub_type = sub_properties[sub_name].integer? "number":""                
+                        let is_long = sub_properties[sub_name].long === true
+                        let multiple = sub_properties[sub_name].multiple
+
+                        if(!is_long && multiple === undefined){
+                            width = width.toString() + "%"
+                            booleanString.push(
+                                <Input disabled={!checked} addonBefore={sub_name} onChange={(e)=>inputOnChange(e, formDataNo_copy, this.formNo, dataNo)} 
+                                    type={sub_type} key={bs_key} style={{marginBottom:10,width:width}} defaultValue={data[i]} size={this.size}></Input>
+                            )
+                        } else if (multiple !== undefined){
+                            let multiLength = sub_properties[sub_name].multiLength
+                            let after = multiple[0]
+
+                            let input = [(<Input addonBefore={title + ": "} addonAfter={after} disabled={!checked} onChange={(e)=>inputOnChange(e, formDataNo_copy, this.formNo, [dataNo,0])} 
+                                style={{width:(width * multiLength[0]).toString() + "%"}} defaultValue={data[i][0]} size={this.size}></Input>)]
+                            for (let m in multiple){
+                                if (m === "0") {
+                                    continue
+                                }
+                                input.push(
+                                    (<Input addonAfter={multiple[m]} disabled={!checked} onChange={(e)=>inputOnChange(e, formDataNo_copy, this.formNo, [dataNo,m])} 
+                                style={{width:(width * multiLength[parseInt(m)]).toString() + "%"}} defaultValue={data[i][m]} size={this.size}></Input>)
+                                )
+                            }
+                            booleanString.push(input)
+                        } else{
+                            width = width.toString() + "%"
+                            booleanString.push(
+                                <TextArea disabled={!checked} onChange={(e)=>inputOnChange(e, formDataNo_copy, this.formNo, dataNo)} 
+                                key={bs_key} style={{marginBottom:10,width:width}} size={this.size} rows={4} defaultValue={data[i]}/>
+                            )
+                        }
                     }
                     i += 1
                 }
                 defaultValue = defaultValue.length === 0? null: defaultValue
                 const c_key = defaultValue === null && !boolean_checked[key]? key+"null":key
                 forms.push(
-                    <div key={c_key}>
+                    <div key={c_key} style={{borderRadius: "50px",marginBottom:20, backgroundColor:"#f3f9fF", padding: "20px"}}>
                         <Checkbox 
                         onChange = {(e) => checkboxWithInputOnChange(e, key, boolean_checked, formNo_copy, formDataNo_copy)}
-                        style={{marginBottom:10,fontSize:this.fontSize}} defaultChecked={checked}>
+                        style={{marginBottom:10,fontSize:this.fontSize, fontWeight:"bolder"}} defaultChecked={checked}>
                             {title}
                         </Checkbox>
+                        <br/>
                         <br/>
                         <Checkbox.Group disabled={!checked} defaultValue={defaultValue}>
                             {checkGroup}
                         </Checkbox.Group>
-                        {booleanString}
                         <br/>
+                        {booleanString}
                     </div>
                 )
             }

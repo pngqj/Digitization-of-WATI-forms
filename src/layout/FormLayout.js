@@ -1,7 +1,6 @@
 import React from 'react';
-import { Modal, message, Select, Input, Checkbox, DatePicker, List, Row, Col, Divider, Descriptions, Switch, Icon, Card } from 'antd';
+import { Modal, message, Icon, Card, Button } from 'antd';
 import * as enlargeActions from '../store/actions/enlarge';
-
 import { connect } from 'react-redux';
 import { render } from "react-dom";
 import ReactToPrint from "react-to-print";
@@ -11,6 +10,7 @@ import * as formHandler from './forms/FormHandler'
 import './formstyle.css'
 import Grid from 'antd/lib/card/Grid';
 import FormProperties from './FormProperties';
+
 
 class FormLayout extends React.Component {    
     constructor(props) {
@@ -42,8 +42,6 @@ class FormLayout extends React.Component {
                     if (type === "switch"){
                         boolean_checked[key] = false
                         for (let d in data){
-                            console.log(data)
-
                             if(data[d] === true || (typeof data[d] === "string" && data[d] !== "")){
                                 boolean_checked[key] = true
                             }
@@ -90,7 +88,11 @@ class FormLayout extends React.Component {
 
     inputOnChange = (e, formDataNo, formNo, dataNo) =>{
         if (dataNo !== undefined){
-            this.formData[formNo].data[formDataNo][dataNo] = e.target.value
+            if( Array.isArray(dataNo) ){
+                this.formData[formNo].data[formDataNo][dataNo[0]][dataNo[1]] = e.target.value
+            }else{
+                this.formData[formNo].data[formDataNo][dataNo] = e.target.value
+            }
             return
         }
         try{
@@ -206,8 +208,6 @@ class FormLayout extends React.Component {
                     ''
                 }
                 
-
-                
                 {this.createForm(this.state.fontSize, this.state.fontSizeTitle, false)}
                 
                 
@@ -229,6 +229,17 @@ class FormLayout extends React.Component {
                     :
                     ''
                 }
+
+                <Button
+                shape="circle"
+                style={{
+                    position: "fixed",
+                    bottom: "100px",
+                    right: "100px",
+                    height:"50px",
+                    width:"50px"}}><Icon  style={{
+                                    height:"50px",
+                                    width:"50px"}} type="bars"/></Button>
                 
             </div>
         )

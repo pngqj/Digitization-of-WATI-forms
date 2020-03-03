@@ -13,7 +13,7 @@ export const schema= [
             "Finger(s) ":{type:"boolean",span:8},"Eyebrows":{type:"boolean",span:8},
             "Other":{"type":"boolean string", span:24},
             question1: {type: "paragraph", span: 24, description: "Describe briefly the activities/situations observed"},
-            _:{type:"long string",span:24},
+            _:{type:"string",span:24, long:true},
         }
     },
     {
@@ -52,7 +52,7 @@ export const schema= [
             "Pointers, hand grips, splints etc.":{type:"boolean",span:12},"Light beam/laser":{type:"boolean",span:12},
             "Other":{"type":"boolean string", span:24},
             question1: {type: "paragraph", span: 24, description: "Describe which seemed to work the best and why"},
-            _:{type:"long string",span:24},
+            _:{type:"string",span:24, long:true},
         }
     },
     {
@@ -109,7 +109,7 @@ export const schema= [
             "Arm slot":{type:"boolean",span:6},"Eye brow":{type:"boolean",span:6},"Tongue":{type:"boolean",span:6},"Sip/puff":{type:"boolean",span:6},
             "Tread":{type:"boolean",span:6},"Other":{"type":"boolean string", span:24}, 
             question1: {type: "paragraph", span: 24, description: "Summary of Student’s Abilities and Concerns Related to Computer/Device Access"},
-            _:{type:"long string",span:24},
+            _:{type:"string",span:24, long:true},
 
         }
     },
