@@ -2,6 +2,12 @@ import * as exampleForm from "./exampleForm"
 import * as WATI_Consideration_Guide from "./WATI Consideration Guide"
 import * as Referral_Guide from "./Referral Guide"
 import * as Assistive_Procedure_Guide from "./Assistive Procedure Guide"
+import * as Environmental_Guide from "./Environmental Guide"
+import * as Environmental_Summary from "./Environmental Summary"
+import * as WATI_Making_Guide from "./WATI Making Guide"
+import * as WATI_Use_Guide from "./WATI Use Guide"
+import * as WATI_Use_Summary from "./WATI Use Summary"
+import * as WATI_Technology_Checklist from "./WATI Technology Checklist"
 
 const createEmptyDataFromProps = (property) =>{
     let data = null
@@ -31,25 +37,21 @@ const createEmptyDataFromProps = (property) =>{
             }
         }
 
-        console.log(colheadersMaxLen)
-
         data = []
         let i = 0
         do{
             let d = {key: i}
             for(let col in property.columns){
-                let inputType = property.columns[col].inputType
+                let input = property.columns[col].inputType
                 if(property.columns[col].editable){
-                    inputType = inputType === "boolean"? false : ""
-                    d[property.columns[col].dataIndex] = inputType
+                    input = input === "boolean"? false : ""
+                    d[property.columns[col].dataIndex] = input
                 } else{
                     d[property.columns[col].dataIndex] = property.columns[col].colheader[i]
                 }
                 
             }
             d['enabled'] = !property.needCheckBox === true
-            console.log(i)
-            console.log(d)
 
             data.push(d)
             i += 1
@@ -86,15 +88,14 @@ const createEmptyData = (schema) => {
 
 
 export const form_names = {
-    "example form": {schema: exampleForm.schema, formData:createEmptyData(exampleForm.schema)},
     "WATI Assistive Technology Consideration Guide":{schema: WATI_Consideration_Guide.schema, formData:createEmptyData(WATI_Consideration_Guide.schema)},
     "WATI Assistive Technology Assessment Directions/Procedure Guide":{schema: Assistive_Procedure_Guide.schema, formData:createEmptyData(Assistive_Procedure_Guide.schema)},
     "Referral/Question Identification Guide":{schema: Referral_Guide.schema, formData:createEmptyData(Referral_Guide.schema)},
-    "WAT Student Infomation Guide":{schema: [], formData:[]},
-    "Environmental Observation Guide":{schema: [], formData:[]},
-    "Environmental Observation Summary":{schema: [], formData:[]},
-    "WATI Assistive Technology Decision Making Guide":{schema: [], formData:[]},
-    "WATI Assistive Technology Assessment Technology Checklist":{schema: [], formData:[]},
-    "WATI Assistive Technology Trial Use Guide":{schema: [], formData:[]},
-    "WATI Assistive Technology Trial Use Summary":{schema: [], formData:[]},
+    // "WATI Student Information Guide":{schema: [], formData:[]},
+    "Environmental Observation Guide":{schema: Environmental_Guide.schema, formData:createEmptyData(Environmental_Guide.schema)},
+    "Environmental Observation Summary":{schema: Environmental_Summary.schema, formData:createEmptyData(Environmental_Summary.schema)},
+    "WATI Assistive Technology Decision Making Guide":{schema: WATI_Making_Guide.schema, formData:createEmptyData(WATI_Making_Guide.schema)},
+    "WATI Assistive Technology Assessment Technology Checklist":{schema: WATI_Technology_Checklist.schema, formData:createEmptyData(WATI_Technology_Checklist.schema)},
+    "WATI Assistive Technology Trial Use Guide":{schema: WATI_Use_Guide.schema, formData:createEmptyData(WATI_Use_Guide.schema)},
+    "WATI Assistive Technology Trial Use Summary":{schema: WATI_Use_Summary.schema, formData:createEmptyData(WATI_Use_Summary.schema)},
 }

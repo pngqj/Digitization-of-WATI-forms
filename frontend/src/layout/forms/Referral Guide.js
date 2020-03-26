@@ -154,101 +154,6 @@ const main_schema = [
     },
 ]
 
-// export const formData = [
-//     {
-//         key:0,
-//         data:
-//         [
-//             "test_name", moment('01/01/2019', constants.dateFormat), 12, "xxx primary school", "P3",
-//             "contact_name", 6543210, "complete_name", moment('01/01/2020', constants.dateFormat),
-//             "parent_name", 1234567, "random_address", "English", "Chinese"
-//         ]
-//     },
-//     {
-//         key:1,
-//         data:
-//         [
-//             true,true,true,false,false,false,null
-//         ]
-//     }
-// ]
-
-const main_formData = [
-    {
-        key:0,
-        data:
-        [
-            "", null, "", "", "",
-            "", "", "", null,
-            "", "", "", "", ""
-        ]
-    },
-    {
-        key:1,
-        data:
-        [
-            false,false,false,false,false,false
-        ]
-    },
-    {
-        key:2,
-        data:
-        [
-            false,false,false,false,false
-        ]
-    },
-    {
-        key:3,
-        data:
-        [
-            false,false,false,false,""
-        ]
-    },
-    {
-        key:4,
-        data:
-        [
-            false,false,false,""
-        ]
-    },
-    {
-        key:5,
-        data:
-        [
-            false,false,false,false,false,false,false,false,"","","",""
-        ]
-    },
-    {
-        key:5,
-        data:
-        [
-            false,false,false,false,false,false,false,false,false,false,false,"","","",""
-        ]
-    },
-    {
-        key:5,
-        data:
-        [
-            [
-                {
-                    key: 0,
-                    assistive_technology:"",
-                    number_of_trails:"",
-                    date_of_trails:null,
-                    outcome:""
-                }
-            ]
-        ]
-    },
-    {
-        key:6,
-        data:
-        [
-            null,"",null,false,false,false,false,false,false,false,true,false,false,false,false,false
-        ]
-    }
-]
-
 const addSectionNo = (schema, no) => {
     for(let i in schema){
         schema[i]['section'] = no
@@ -282,8 +187,6 @@ let schema12 = JSON.parse(JSON.stringify(section12.schema))
 schema12 = addSectionNo(schema12, 12)
 let schema13 = JSON.parse(JSON.stringify(section13.schema))
 schema13 = addSectionNo(schema13, 13)
-
-
 
 
 let temp_schema = main_schema

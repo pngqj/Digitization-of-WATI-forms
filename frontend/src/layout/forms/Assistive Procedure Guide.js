@@ -109,13 +109,20 @@ export const schema = [
                         ensure that someone transfers the information to paper for the\
                         child’s file for future reference. \
                     </p>\
+                    <h6>Trial Use: </h6>\
+                    <h6>Step 8: Implement Planned Trials</h6>\
+                    <h6>Step 9: Follow Up on Planned Date </h6>\
+                    <p>\
+                        Review trial use. Make any needed decisions about permanent\
+                        use. Plan for permanent use.\
+                    </p>\
                     ']
                 },
                 {
                     title: 'Date Completed & Comments',
                     dataIndex: 'comments',
                     editable: true,
-                    minRows:40,
+                    minRows:60,
                 }
           ]
 },

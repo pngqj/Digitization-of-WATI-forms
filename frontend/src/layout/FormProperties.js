@@ -1,7 +1,9 @@
 import EditableTable from "./EditableTable"
-import * as constants from '../Constants'
+import * as Constants from '../Constants'
 import React from 'react';
 import {Select, Input, Checkbox, DatePicker, List, Row, Col, Divider, Descriptions, Switch, Icon, Card, message, InputNumber } from 'antd';
+import moment from 'moment';
+
 const { Option } = Select;
 const { TextArea } = Input;
 const InputGroup = Input.Group;
@@ -14,7 +16,7 @@ class FormProperties{
         this.fontSize = fontSize
         this.formData = formData
         this.isPDF = isPDF
-        this.size = this.fontSize === constants.fontSizeLarge? "large" : "default"
+        this.size = this.fontSize === Constants.fontSizeLarge? "large" : "default"
     }
 
     getCheckBoxGroup(tagGroup, tagGroupData, key){
@@ -66,28 +68,43 @@ class FormProperties{
                 const formDataNo_copy = formDataNo
                 let string_type = this.properties[props].integer === true? "number": ""
                 let is_long = this.properties[props].long === true
+                let is_highlight = this.properties[props].highlight === true
                 let after = this.properties[props].after
 
+                let input = null
                 if(!is_long){
-                    forms.push(<Input addonBefore={title} addonAfter={after} type={string_type} onChange={(e)=>inputOnChange(e, formDataNo_copy, this.formNo, undefined)} key={key} style={style} size={this.size} defaultValue={data}/>)
+                    input = <Input addonBefore={title} addonAfter={after} type={string_type} onChange={(e)=>inputOnChange(e, formDataNo_copy, this.formNo, undefined)} key={key} style={style} size={this.size} defaultValue={data}/>
                 } else{
-                    forms.push(<TextArea onChange={(e)=>inputOnChange(e, formDataNo_copy, this.formNo, undefined)} key={key} style={style} size={this.size} rows={4} defaultValue={data}/>)
+                    input = <TextArea onChange={(e)=>inputOnChange(e, formDataNo_copy, this.formNo, undefined)} key={key} style={style} size={this.size} autosize={{ minRows: 4, maxRows: 100 }} defaultValue={data}/>
                 }
+
+                if(is_highlight){
+                    forms.push(<div style={{borderRadius: "50px",marginBottom:20, backgroundColor:"#f3f9fF", padding: "20px"}}>{input}</div>)
+                } else{
+                    forms.push(input)
+                }
+
             }  else if (type === "paragraph"){
-                forms.push(<List 
-                            key={key}
-                            bordered={false}
-                            dataSource={[this.properties[props].description]}
-                            renderItem={(paragraph) => {
-                                let items = []
-                                paragraph = paragraph.split("\n")
-                                for(let p in paragraph){
-                                    items.push(<span style={{fontSize: this.fontSize}} bordered="false" key = {p}>{paragraph[p]}</span>)
-                                    items.push(<br key={p + "br"}/>)
-                                }
-                                return items
-                            }}
-                            />)
+                let isHTML = this.properties[props].isHTML
+
+                if (isHTML){
+                    forms.push(<div dangerouslySetInnerHTML={{__html: this.properties[props].description}}/>)
+                } else{
+                    forms.push(<List 
+                        key={key}
+                        bordered={false}
+                        dataSource={[this.properties[props].description]}
+                        renderItem={(paragraph) => {
+                            let items = []
+                            paragraph = paragraph.split("\n")
+                            for(let p in paragraph){
+                                items.push(<span style={{fontSize: this.fontSize}} bordered="false" key = {p}>{paragraph[p]}</span>)
+                                items.push(<br key={p + "br"}/>)
+                            }
+                            return items
+                        }}
+                        />)
+                }
             } else if (type === "boolean" || type === "boolean section"){
                 let checked = data
                 const formNo_copy = this.formNo
@@ -179,7 +196,7 @@ class FormProperties{
                                         ''
                                     }
                                     <TextArea disabled={!checked} onChange={(e)=>inputOnChange(e, formDataNo_copy, this.formNo, undefined)} 
-                                        style={style} defaultValue={data} size={this.size} rows={4}></TextArea>
+                                        style={style} defaultValue={data} size={this.size} autosize={{ minRows: 4, maxRows: 100 }}></TextArea>
                                 </Col> 
                         }                  
                     )
@@ -187,13 +204,10 @@ class FormProperties{
             } else if (type === "date"){
                 const formDataNo_copy = formDataNo
                 if (!this.isPDF){
-                    forms.push( <DatePicker placeholder={title} onChange={(e)=>inputOnChange(e, formDataNo_copy, this.formNo, undefined)} size={this.size} key={key} style={style} defaultValue={data} format={constants.dateFormat} />)
+                    let date = data === null? "" : moment(data, Constants.dateFormat);
+                    forms.push( <DatePicker placeholder={title} onChange={(e)=>inputOnChange(e, formDataNo_copy, this.formNo, undefined)} size={this.size} key={key} style={style} defaultValue={date} format={Constants.dateFormat} />)
                 } else{
-                    try{
-                        forms.push(<Input addonBefore={title} value={data.format(constants.dateFormat)} size={this.size} key={key} style={style} ></Input>)
-                    } catch{
-                        forms.push(<Input addonBefore={title} value={""} size={this.size} key={key} style={style} ></Input>)
-                    }
+                    forms.push(<Input addonBefore={title} value={data} size={this.size} key={key} style={style} ></Input>)
                 }
             } else if (type === "table"){
                 let columns = this.properties[props].columns
@@ -326,7 +340,7 @@ class FormProperties{
                             width = width.toString() + "%"
                             booleanString.push(
                                 <TextArea disabled={!checked} onChange={(e)=>inputOnChange(e, formDataNo_copy, this.formNo, dataNo)} 
-                                key={bs_key} style={{marginBottom:10,width:width}} size={this.size} rows={4} defaultValue={data[i]}/>
+                                key={bs_key} style={{marginBottom:10,width:width}} size={this.size} autosize={{ minRows: 4, maxRows: 100 }} defaultValue={data[i]}/>
                             )
                         }
                     }

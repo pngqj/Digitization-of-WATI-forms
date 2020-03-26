@@ -13,3 +13,7 @@ export const black_font = {color:"#000000"}
 export const blue_color="#1890FF"
 
 export const dateFormat = 'DD/MM/YYYY'
+
+export const savedDataName = 'savedData'
+export const savedActiveKey = 'activeKey'
+export const savedTabIndex = 'savedTabIndex'

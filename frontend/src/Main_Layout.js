@@ -14,27 +14,6 @@ import * as formHandler from './layout/forms/FormHandler'
 const { SubMenu } = Menu;
 const { Header, Content, Footer } = Layout;
 
-const formSubMenu = (fontSizeMenu) => {
-    let options = []
-    for(let name in formHandler.form_names){
-        let link = "/forms/" + name.split(" ").join("_")
-        options.push(
-            <Menu.Item key={name}>
-                <Link style={{fontSize:fontSizeMenu}} to={link}>{name}</Link>
-            </Menu.Item> 
-        )
-    }
-
-    return(
-    <SubMenu
-        key="sub1"
-        title={<span style={{fontSize:fontSizeMenu}}>Forms</span>}
-      >
-        {options}
-  </SubMenu>
-  )
-}
-
 class CustomLayout extends React.Component {
 
     constructor(props) {
@@ -153,11 +132,6 @@ class CustomLayout extends React.Component {
     };
   
     render() {
-        let path_name=window.location.pathname
-        if (path_name.includes("/forms/")){
-            path_name = path_name.replace("/forms/", "/form/")
-            this.props.history.push(path_name)
-        }
         return (
             <Layout className="layout" style={ {backgroundColor:"#47524d", backgroundSize: "100%"}}>
                 {this.authModels()}
@@ -176,7 +150,9 @@ class CustomLayout extends React.Component {
                     defaultSelectedKeys={['1']}
                     mode="vertical"
                 >
-                    {formSubMenu(this.state.fontSizeMenu)}
+                    <Menu.Item key={"forms"}>
+                        <Link style={{fontSize:this.state.fontSizeMenu}} to={"/forms"}>Forms</Link>
+                    </Menu.Item> 
                     <Menu.Item key={"login"}>
                         <span style={{fontSize:this.state.fontSizeMenu}} onClick={()=>{message.info("Coming soon!")}}>Login</span>
                     </Menu.Item>

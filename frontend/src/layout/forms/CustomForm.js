@@ -1,29 +1,24 @@
 import React from 'react';
 import { Modal, message, Icon, Card, Button } from 'antd';
-import * as enlargeActions from '../store/actions/enlarge';
+import * as enlargeActions from '../../store/actions/enlarge';
 import { connect } from 'react-redux';
 import { render } from "react-dom";
 import ReactToPrint from "react-to-print";
-import Form from "react-jsonschema-form";
-import * as constants from '../Constants'
-import * as formHandler from './forms/FormHandler'
-import './formstyle.css'
-import Grid from 'antd/lib/card/Grid';
-import FormProperties from './FormProperties';
+import * as Constants from '../../Constants'
+import * as formHandler from './FormHandler'
+import FormProperties from '../FormProperties';
+import moment from 'moment';
 
 
-class FormLayout extends React.Component {    
+class CustomForm extends React.Component {    
     constructor(props) {
         super(props);
-        this.myRef = React.createRef();
-        let path_name = window.location.pathname.replace("/form/", "").split("_").join(" ")
         let boolean_checked = {}
         let ignoreSection = []
-        try{
-            this.schema = formHandler.form_names[path_name].schema
-            this.uiSchema = formHandler.form_names[path_name].uiSchema
-            this.name = path_name
-            this.formData = formHandler.form_names[path_name].formData
+        try{            
+            this.schema = formHandler.form_names[this.props.form_name].schema
+            this.name = this.props.form_name
+            let formData = this.getFormData()
 
             for (let formNo = 0; formNo < this.schema.length; formNo++){
                 let properties = this.schema[formNo].properties
@@ -32,7 +27,7 @@ class FormLayout extends React.Component {
                 for(let props in properties){
                     let type = properties[props].type
                     let section = properties[props].section
-                    const data = this.formData[formNo].data[formDataNo]
+                    const data = formData[formNo].data[formDataNo]
                     let key = formNo * 1000 + formDataNo + props
 
                     if (type === "boolean string"){
@@ -53,7 +48,6 @@ class FormLayout extends React.Component {
                     }
 
                     if(type === "boolean section" && section !== undefined){
-                        console.log(data)
                         if (data === false){
                             ignoreSection.push(section)
                         }
@@ -65,17 +59,52 @@ class FormLayout extends React.Component {
         }catch(e){
             console.log(e)
             this.schema = []
-            this.uiSchema = []
             this.name = ""
-            this.formData = []
         }
 
         this.state = {
-            fontSize:constants.fontSize, 
-            fontSizeTitle: constants.fontSizeTitle,
+            fontSize:Constants.fontSize, 
+            fontSizeTitle: Constants.fontSizeTitle,
             boolean_checked:boolean_checked,
             ignoreSection:ignoreSection
         }
+    }
+
+    getFormData(){
+        let savedDataName = Constants.savedDataName 
+        let formData = localStorage.getItem(savedDataName)
+        if(formData === null){
+            formData = formHandler.form_names[this.props.form_name].formData
+            let l = {formData:formData, title:this.props.form_name, form_name:this.props.form_name}
+            let localstr = {}
+            localstr[this.props.activeKey] = l
+            localstr = JSON.stringify(localstr)
+            localStorage.setItem(savedDataName, localstr)
+        } else{
+            formData = JSON.parse(formData);
+            formData = formData[this.props.activeKey]
+
+            if(formData === undefined){
+                formData = formHandler.form_names[this.props.form_name].formData
+                let l = {formData:formData, title:this.props.form_name, form_name:this.props.form_name}
+                let localstr = localStorage.getItem(savedDataName)
+                localstr = JSON.parse(localstr);
+                localstr[this.props.activeKey] = l
+                localstr = JSON.stringify(localstr)
+                localStorage.setItem(savedDataName, localstr)
+            } else{
+                formData = formData.formData
+            }
+        }
+        return formData
+    }
+
+    saveFormData(formData){
+        let savedDataName = Constants.savedDataName 
+        let localstr = localStorage.getItem(savedDataName)
+        localstr = JSON.parse(localstr);
+        localstr[this.props.activeKey].formData = formData
+        localStorage.setItem(savedDataName, JSON.stringify(localstr))
     }
 
     componentDidMount(){
@@ -83,31 +112,40 @@ class FormLayout extends React.Component {
     }
 
     saveTableData = (formNo, formDataNo, newData) => {
-        this.formData[formNo].data[formDataNo] = newData
+        let formData = this.getFormData()
+        formData[formNo].data[formDataNo] = newData
+        this.saveFormData(formData)
     }
 
     inputOnChange = (e, formDataNo, formNo, dataNo) =>{
+        let formData = this.getFormData()
         if (dataNo !== undefined){
             if( Array.isArray(dataNo) ){
-                this.formData[formNo].data[formDataNo][dataNo[0]][dataNo[1]] = e.target.value
+                formData[formNo].data[formDataNo][dataNo[0]][dataNo[1]] = e.target.value
             }else{
-                this.formData[formNo].data[formDataNo][dataNo] = e.target.value
+                formData[formNo].data[formDataNo][dataNo] = e.target.value
             }
+            this.saveFormData(formData)
             return
         }
         try{
-            this.formData[formNo].data[formDataNo] = e.target.value
+            formData[formNo].data[formDataNo] = e.target.value
         } catch {
-            this.formData[formNo].data[formDataNo] = e
+            let value = e
+            value = moment.isMoment(value)? moment(value).format(Constants.dateFormat) : value 
+            formData[formNo].data[formDataNo] = value
         }
+        this.saveFormData(formData)
     }
 
     checkboxOnChange = (e, checkType, formNo, formDataNo, sectionNo, dataNo)=>{
+        let formData = this.getFormData()
         if(checkType==="switch" && dataNo !== undefined){
-            this.formData[formNo].data[formDataNo][dataNo] = e.target.checked
+            formData[formNo].data[formDataNo][dataNo] = e.target.checked
             return
         }
-        this.formData[formNo].data[formDataNo] = e.target.checked
+        formData[formNo].data[formDataNo] = e.target.checked
+        this.saveFormData(formData)
         if(checkType==="boolean section"){
             let ignoreSection = this.state.ignoreSection
             if(e.target.checked){
@@ -120,26 +158,28 @@ class FormLayout extends React.Component {
     }
 
     checkboxWithInputOnChange = (e, key, boolean_checked, formNo, formDataNo) =>{
+        let formData = this.getFormData()
         if (!e.target.checked){
-            if(typeof this.formData[formNo].data[formDataNo] === "string"){
-                this.formData[formNo].data[formDataNo] = ""
+            if(typeof formData[formNo].data[formDataNo] === "string"){
+                formData[formNo].data[formDataNo] = ""
             } else{
-                for(let i in this.formData[formNo].data[formDataNo]){
-                    if(typeof this.formData[formNo].data[formDataNo][i] === "string"){
-                        this.formData[formNo].data[formDataNo][i] = ""
-                    } else if (typeof this.formData[formNo].data[formDataNo][i] === "boolean"){
-                        this.formData[formNo].data[formDataNo][i] = false
+                for(let i in formData[formNo].data[formDataNo]){
+                    if(typeof formData[formNo].data[formDataNo][i] === "string"){
+                        formData[formNo].data[formDataNo][i] = ""
+                    } else if (typeof formData[formNo].data[formDataNo][i] === "boolean"){
+                        formData[formNo].data[formDataNo][i] = false
                     }
                 }
             }
         }
         boolean_checked[key] = e.target.checked
-
+        this.saveFormData(formData)
         this.setState({boolean_checked: boolean_checked})
     }
 
     createForm = (fontSize, fontSizeTitle, isPDF) => {
         let forms = [<h1 key="form name">{this.name}</h1>]
+        let formData = this.getFormData()
         for (let formNo = 0; formNo < this.schema.length; formNo++){
             let section = this.schema[formNo].section
             if (section !== undefined && this.state.ignoreSection.includes(section)){
@@ -161,7 +201,7 @@ class FormLayout extends React.Component {
             
             let properties = this.schema[formNo].properties
 
-            let formprops = new FormProperties(properties,formNo,isPDF,fontSize,this.formData)
+            let formprops = new FormProperties(properties,formNo,isPDF,fontSize,formData)
             let props_form = formprops.getFormProperties(this.state, this.inputOnChange.bind(this), 
                 this.saveTableData.bind(this), this.checkboxOnChange.bind(this), 
                 this.checkboxWithInputOnChange.bind(this))
@@ -172,7 +212,6 @@ class FormLayout extends React.Component {
 
         let mainKey = "main div"
         mainKey = isPDF? mainKey + "pdf": mainKey
-        console.log(this.state.boolean_checked)
         return (
             <div key={mainKey}>
                 {forms}
@@ -186,9 +225,9 @@ class FormLayout extends React.Component {
     componentWillReceiveProps(nextProps){
         if(nextProps.isEnlarge !== null){
             if(nextProps.isEnlarge.enlarge){
-                this.setState({fontSize:constants.fontSize, fontSizeTitle: constants.fontSizeTitle})
+                this.setState({fontSize:Constants.fontSize, fontSizeTitle: Constants.fontSizeTitle})
             } else{
-                this.setState({fontSize:constants.fontSizeLarge, fontSizeTitle: constants.fontSizeTitleLarge})
+                this.setState({fontSize:Constants.fontSizeLarge, fontSizeTitle: Constants.fontSizeTitleLarge})
             }
         }
     }
@@ -229,18 +268,6 @@ class FormLayout extends React.Component {
                     :
                     ''
                 }
-
-                <Button
-                shape="circle"
-                style={{
-                    position: "fixed",
-                    bottom: "100px",
-                    right: "100px",
-                    height:"50px",
-                    width:"50px"}}><Icon  style={{
-                                    height:"50px",
-                                    width:"50px"}} type="bars"/></Button>
-                
             </div>
         )
     }
@@ -267,4 +294,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(FormLayout);
+export default connect(mapStateToProps, mapDispatchToProps)(CustomForm);

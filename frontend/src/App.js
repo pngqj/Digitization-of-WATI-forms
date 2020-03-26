@@ -13,13 +13,20 @@ class App extends Component {
         // document.body.style.zoom = 1.25 //set default zoom 1.25x, make everything bigger
 
         this.props.onTryAutoSignup();
+
+        fetch("http://localhost:5000/")
+        .then(result =>{
+            return result.json()
+        }).then(result =>{
+            console.log(result)
+        })
     }
 
     render() {
         return ( 
         <BrowserRouter>
             <Layout {...this.props}>
-                <Route path="/form/" component={() => <FormLayout {...this.props}/>} />
+                <Route path="/forms" component={() => <FormLayout {...this.props}/>} />
             </Layout>
         </BrowserRouter>
             );
