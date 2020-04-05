@@ -1,10 +1,9 @@
-import {Form, Input, Modal, Icon, Radio, message} from 'antd';
+import {Form, Input, Modal, Radio, message} from 'antd';
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import * as actions from '../store/actions/auth';
 
-import axios from 'axios';
 import * as constants from '../Constants'
 
 const FormItem = Form.Item;
@@ -70,7 +69,7 @@ class UserSettingsModal extends React.Component {
                 required: true, message: 'Please input your old password!',
               }],
             })(
-              <Input placeholder="Old Password" prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password"/>
+              {/* <Input placeholder="Old Password" prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password"/> */}
             )}
           </FormItem>
           <FormItem>
@@ -81,7 +80,7 @@ class UserSettingsModal extends React.Component {
                 validator: this.validateToNextPassword,
               }],
             })(
-              <Input placeholder="New Password" prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password"/>
+              {/* <Input placeholder="New Password" prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password"/> */}
             )}
           </FormItem>
 
@@ -93,7 +92,7 @@ class UserSettingsModal extends React.Component {
                 validator: this.compareToFirstPassword,
               }],
             })(
-              <Input placeholder="Confirm Password" prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" onBlur={this.handleConfirmBlur} />
+              {/* <Input placeholder="Confirm Password" prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" onBlur={this.handleConfirmBlur} /> */}
             )}
           </FormItem>
         </Form>  

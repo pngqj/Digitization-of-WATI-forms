@@ -1,11 +1,19 @@
 import React from 'react';
-import { message, Form, Icon, Input, Button, Spin, Modal } from 'antd';
+import { message, Form, Input, Button, Spin, Modal } from 'antd';
 import { connect } from 'react-redux';
 import { NavLink, withRouter } from 'react-router-dom';
 import * as actions from '../store/actions/auth';
 
+import {
+    HomeOutlined,
+    SettingFilled,
+    SmileOutlined,
+    SyncOutlined,
+    LoadingOutlined,
+  } from '@ant-design/icons';
+
 const FormItem = Form.Item;
-const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
+const antIcon = LoadingOutlined
 
 
 class NormalLoginForm extends React.Component {
@@ -102,7 +110,7 @@ class NormalLoginForm extends React.Component {
                             this.state.spinVisible ?
                             <Spin indicator={antIcon} />
                             :
-                            <Input onChange={(e)=>this.setState({resetPwUsername:e.target.value})} autoFocus prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />
+                            {/* <Input onChange={(e)=>this.setState({resetPwUsername:e.target.value})} autoFocus prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" /> */}
                         }
                 </Modal>
                 {
@@ -118,7 +126,7 @@ class NormalLoginForm extends React.Component {
                         {getFieldDecorator('userName', {
                             rules: [{ required: true, message: 'Please input your username!' }],
                         })(
-                            <Input autoFocus prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />
+                            {/* <Input autoFocus prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" /> */}
                         )}
                         </FormItem>
 
@@ -126,7 +134,7 @@ class NormalLoginForm extends React.Component {
                         {getFieldDecorator('password', {
                             rules: [{ required: true, message: 'Please input your Password!' }],
                         })(
-                            <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" />
+                            {/* <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" /> */}
                         )}
                         </FormItem>
 

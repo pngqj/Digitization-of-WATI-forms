@@ -1,0 +1,10 @@
+ - reinstall npm packages. 500+ vulnerability found
+ - fix editable table. deleteRow got some issues (setstate does not update table data). issue could be caused by vulnerability descrbed above.
+ - PDPA issues - may need to remove students particular in the future. 
+ - Setup database - may not need to do so cos of PDPA issues. But implement it for now. 
+ - File sharing - allow users to upload file and share with others
+ - set permissions - allow lead teacher to set which sub-teacher to edit which form. sub teacher who do not have permissions for the form can read the form, but cannot edit
+ - referal guide - set it such that new sections will be added as table.
+ - WATI Assistive Technology Decision Making Guide form - setup the table with popover on the headings that displays hint (shown in the form)
+ - add date modified in form management table
+ - 

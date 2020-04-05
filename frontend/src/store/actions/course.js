@@ -1,4 +1,4 @@
-import axios from 'axios';
+// import axios from 'axios';
 import * as actionConst from './actionConst';
 import * as constants from '../../Constants'
 
@@ -19,19 +19,19 @@ const courseSave = (course_json) => {
 const downloadCourse = (searchStr) => {
     return dispatch => {
         console.log("downloading course...")
-        axios.post(constants.host_link + '/api/course_with_ratings/',{
-            searchStr:searchStr
-        })
-        .then(res => {
-            console.log("downloaded course")
-            var course_json = res.data;
-            console.log(course_json)
-            dispatch(courseSave(course_json));
-        })
-        .catch(err => {
-            console.log(err)
-            dispatch(courseError(err))
-        })
+        // axios.post(constants.host_link + '/api/course_with_ratings/',{
+        //     searchStr:searchStr
+        // })
+        // .then(res => {
+        //     console.log("downloaded course")
+        //     var course_json = res.data;
+        //     console.log(course_json)
+        //     dispatch(courseSave(course_json));
+        // })
+        // .catch(err => {
+        //     console.log(err)
+        //     dispatch(courseError(err))
+        // })
     }
 }
 

@@ -1,4 +1,4 @@
-import axios from 'axios';
+// import axios from 'axios';
 import * as actionConst from './actionConst';
 import * as constants from '../../Constants'
 
@@ -19,20 +19,20 @@ const tagsSave = (tags_json) => {
 const downloadTags = () => {
     return dispatch => {
         console.log("downloading tags...")
-        axios.get(constants.host_link + '/api/tags_viewset/')
-        .then(res => {
-            console.log("downloaded tags")
-            const tags_json = res.data;
-            localStorage.setItem('tags_json', JSON.stringify(tags_json))
+        // axios.get(constants.host_link + '/api/tags_viewset/')
+        // .then(res => {
+        //     console.log("downloaded tags")
+        //     const tags_json = res.data;
+        //     localStorage.setItem('tags_json', JSON.stringify(tags_json))
 
-            const tagExpirationDate = new Date(new Date().getTime() + actionConst.DATA_EXPIRY_TIME);
-            localStorage.setItem('tagExpirationDate', tagExpirationDate);
+        //     const tagExpirationDate = new Date(new Date().getTime() + actionConst.DATA_EXPIRY_TIME);
+        //     localStorage.setItem('tagExpirationDate', tagExpirationDate);
             
-            dispatch(tagsSave(tags_json));
-        })
-        .catch(err => {
-            dispatch(tagsError(err))
-        })
+        //     dispatch(tagsSave(tags_json));
+        // })
+        // .catch(err => {
+        //     dispatch(tagsError(err))
+        // })
     }
 }
 

@@ -6,6 +6,8 @@ import * as actions from './store/actions/auth';
 import Layout from './Main_Layout'
 
 import FormLayout from "./layout/FormLayout";
+import { Input } from 'antd';
+import FormManagementPage from './layout/FormManagementPage';
 
 class App extends Component {
 
@@ -26,7 +28,8 @@ class App extends Component {
         return ( 
         <BrowserRouter>
             <Layout {...this.props}>
-                <Route path="/forms" component={() => <FormLayout {...this.props}/>} />
+                <Route exact path="/forms" component={() => <FormManagementPage {...this.props}/>} />
+                <Route path="/forms/*" component={() => <FormLayout {...this.props}/>} />
             </Layout>
         </BrowserRouter>
             );

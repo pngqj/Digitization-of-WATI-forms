@@ -4,9 +4,9 @@ import { Link, withRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as authActions from './store/actions/auth';
 import * as enlargeActions from './store/actions/enlarge';
-import Login from './Account_Management/Login';
-import Signup from './Account_Management/Signup';
-import UserSettingsModal from './Account_Management/UserSettings_modal';
+// import Login from './Account_Management/Login';
+// import Signup from './Account_Management/Signup';
+// import UserSettingsModal from './Account_Management/UserSettings_modal';
 import * as constants from './Constants'
 import * as formHandler from './layout/forms/FormHandler'
 
@@ -66,21 +66,21 @@ class CustomLayout extends React.Component {
                     >
                     {
                         this.state.loginType === 'Login'?
-                        <Login  handleModalClose={this.handleModalClose}
-                                handleChangeLoginType={this.handleChangeLoginType}/>
+                        {/* <Login  handleModalClose={this.handleModalClose}
+                                handleChangeLoginType={this.handleChangeLoginType}/> */}
                         :
                         this.state.loginType === 'Sign Up'?
-                        <Signup handleModalClose={this.handleModalClose}
-                                handleChangeLoginType={this.handleChangeLoginType}/>
+                        {/* <Signup handleModalClose={this.handleModalClose}
+                                handleChangeLoginType={this.handleChangeLoginType}/> */}
                         :
                         ''
                     }  
                     </Modal>
                     {/* SETTING MODAL */}
-                    <UserSettingsModal 
+                    {/* <UserSettingsModal 
                         visible = {this.state.settingModalVisible}
                         handleModalClose = {this.handleModalClose} 
-                        />
+                        /> */}
             </div>
         )
     }
@@ -151,7 +151,7 @@ class CustomLayout extends React.Component {
                     mode="vertical"
                 >
                     <Menu.Item key={"forms"}>
-                        <Link style={{fontSize:this.state.fontSizeMenu}} to={"/forms"}>Forms</Link>
+                        <Link style={{fontSize:this.state.fontSizeMenu}} to={"/forms"}>Form Management</Link>
                     </Menu.Item> 
                     <Menu.Item key={"login"}>
                         <span style={{fontSize:this.state.fontSizeMenu}} onClick={()=>{message.info("Coming soon!")}}>Login</span>

@@ -1,10 +1,12 @@
 import React from 'react';
-import { Tabs, Modal, Dropdown, Checkbox, Button, Icon, Input, message } from 'antd';
+import { Tabs, Modal, Dropdown, Checkbox, Button, Input, message } from 'antd';
 import * as enlargeActions from '../store/actions/enlarge';
 import { connect } from 'react-redux';
 import * as Constants from '../Constants'
 import * as FormHandler from './forms/FormHandler'
-
+import {
+  EditOutlined
+} from '@ant-design/icons';
 import CustomForm from './forms/CustomForm';
 
 const { TabPane } = Tabs;
@@ -170,7 +172,7 @@ class FormLayout extends React.Component {
             type="editable-card"
             onEdit={this.onEdit}
             tabBarExtraContent={(<Button onClick={this.showEditTabNameModel} style={{marginLeft:"2px", padding:0, height:"20px", width:"20px"}}>
-              <Icon type="edit" style={{fontSize:"12px", position: "absolute", top: "10%", left:"15%"}}></Icon>
+              <EditOutlined type="edit" style={{fontSize:"12px", position: "absolute", top: "10%", left:"15%"}}></EditOutlined>
             </Button>)}
           >
             {this.state.panes.map(pane => (

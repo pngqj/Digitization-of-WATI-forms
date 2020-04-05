@@ -22,10 +22,10 @@ class EditableTable extends React.Component {
         value = moment(value).format(Constants.dateFormat);
         return <Input value={value}></Input>
       } else{
-        value = new Date(value);
-        value = moment(value);
-        console.log(value)
-        // return <Input value={value}></Input>
+        if(value!=='' && value!==undefined){
+          value = new Date(value);
+          value = moment(value);
+        }
         return <DatePicker onChange={(date, datestr) => this.save(date, index, row, col.dataIndex)} key={index} disabled={disabled} format={Constants.dateFormat} value={value}/>
       }
     } else{
@@ -71,9 +71,7 @@ class EditableTable extends React.Component {
     }
     
 
-    this.setState({
-      data: [...data, newData],
-    });
+    this.setState({data: [...data, newData],});
     let formNo = this.props.formNo
     let formDataNo = this.props.formDataNo
     this.props.saveTableData(formNo, formDataNo, [...data, newData])
@@ -85,9 +83,9 @@ class EditableTable extends React.Component {
 
     for (let d = 0; d < data.length; d++){
       data[d].key = d
-    }    
-
-    this.setState({data: data});
+    }  
+    console.log(data)
+    this.setState({data: [...data]});
     let formNo = this.props.formNo
     let formDataNo = this.props.formDataNo
     this.props.saveTableData(formNo, formDataNo, data)
@@ -144,7 +142,7 @@ class EditableTable extends React.Component {
         render: (text, record) => {
           return (
             <Popconfirm title="Confirm Delete?" onConfirm={() => this.deleteRow(record.key)}>
-              <a> Delete</a>
+              <Button type="danger"> Delete</Button>
             </Popconfirm>
           )
         }
@@ -224,4 +222,4 @@ class EditableTable extends React.Component {
   }
 }
 
-export default Form.create()(EditableTable);
+export default (EditableTable);
