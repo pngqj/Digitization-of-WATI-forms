@@ -1,4 +1,4 @@
-import { Checkbox, Table, Input, InputNumber, Popconfirm, Form, message, Modal, DatePicker, Button } from 'antd';
+import { Checkbox, Table, Input, InputNumber, Popconfirm, Form, message, Modal, DatePicker, Button, Popover } from 'antd';
 import React from 'react';
 import * as Constants from '../Constants'
 import moment from 'moment';
@@ -12,7 +12,17 @@ class EditableTable extends React.Component {
   getInput = (col, value, row, index) => {
     let disabled = this.props.needAddButton? false : row.enabled? false : true
     if(col.dataIndex === "colheader"){
-      return <span key={index}>{value}</span>
+      if(value.hover !== undefined && value.hover !== null){
+        let title = value.hoverTitle
+        title = title === undefined? "" : title
+        return (
+          <Popover content={<p>{value.hover}</p>} title={title} trigger="hover">
+            <span key={index}>{value.header}</span>
+          </Popover>
+        )
+      }
+      return <span key={index}>{value.header}</span>
+
     } else if(col.inputType === "boolean"){
       return <Checkbox onChange={(e) => this.save(e, index, row, col.dataIndex)} key={index} disabled={disabled} checked={value}></Checkbox>
     } else if(col.inputType == "number"){
@@ -30,7 +40,7 @@ class EditableTable extends React.Component {
       }
     } else{
       let minRows = col.minRows === undefined? 4 : col.minRows
-      return <TextArea onChange={(e) => this.save(e.target.value, index, row, col.dataIndex)} key={index} disabled={disabled} placeholder="Input your data" autosize={{ minRows: 4, maxRows: 100 }} value={value}/>;
+      return <TextArea onChange={(e) => this.save(e.target.value, index, row, col.dataIndex)} key={index} disabled={disabled} placeholder="Input your data" autoSize={{ minRows: minRows, maxRows: 100 }} value={value}/>;
 
     }
     
@@ -39,6 +49,7 @@ class EditableTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = { data: this.props.data, confirmDeleteModalVisible: false};
+    console.log(this.props.data)
   }
 
   save(value, index, row, dataIndex) {
@@ -84,7 +95,6 @@ class EditableTable extends React.Component {
     for (let d = 0; d < data.length; d++){
       data[d].key = d
     }  
-    console.log(data)
     this.setState({data: [...data]});
     let formNo = this.props.formNo
     let formDataNo = this.props.formDataNo

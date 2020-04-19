@@ -8,7 +8,6 @@ const enlargeSave = (enlarge) => {
 }
 
 export const getEnlarge = () => {
-    console.log("geting enlarge....")
     return dispatch => {
         const enlarge = localStorage.getItem("enlarge");
         if(enlarge === null){

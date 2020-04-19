@@ -14,59 +14,53 @@ class CustomForm extends React.Component {
     constructor(props) {
         super(props);
         let boolean_checked = {}
-        let ignoreSection = []
-        try{            
+
+        let formData = this.getFormData()
+        this.name = this.props.form_name
+
+        try{
             this.schema = formHandler.form_names[this.props.form_name].schema
-            this.name = this.props.form_name
-            let formData = this.getFormData()
+        } catch {
+            let scetionName = this.props.form_name.replace("Referral/Question Identification Guide ", "")
+            this.schema = formHandler.referral_Guide_Sections[scetionName].schema
+        }
+        
 
-            for (let formNo = 0; formNo < this.schema.length; formNo++){
-                let properties = this.schema[formNo].properties
-                let formDataNo = 0
+        for (let formNo = 0; formNo < this.schema.length; formNo++){
+            let properties = this.schema[formNo].properties
+            let formDataNo = 0
 
-                for(let props in properties){
-                    let type = properties[props].type
-                    let section = properties[props].section
-                    const data = formData[formNo].data[formDataNo]
-                    let key = formNo * 1000 + formDataNo + props
+            for(let props in properties){
+                let type = properties[props].type
+                let section = properties[props].section
+                const data = formData[formNo].data[formDataNo]
+                let key = formNo * 1000 + formDataNo + props
 
-                    if (type === "boolean string"){
-                        boolean_checked[key] = data !== ""
-                    }
-
-                    if (type === "switch"){
-                        boolean_checked[key] = false
-                        for (let d in data){
-                            if(data[d] === true || (typeof data[d] === "string" && data[d] !== "")){
-                                boolean_checked[key] = true
-                            }
-
-                            if(typeof data[d] === "string"){
-                                boolean_checked[key + d] = data[d] !== ""
-                            }
-                        }
-                    }
-
-                    if(type === "boolean section" && section !== undefined){
-                        if (data === false){
-                            ignoreSection.push(section)
-                        }
-                    }
-
-                    formDataNo += 1
+                if (type === "boolean string"){
+                    boolean_checked[key] = data !== ""
                 }
+
+                if (type === "switch"){
+                    boolean_checked[key] = false
+                    for (let d in data){
+                        if(data[d] === true || (typeof data[d] === "string" && data[d] !== "")){
+                            boolean_checked[key] = true
+                        }
+
+                        if(typeof data[d] === "string"){
+                            boolean_checked[key + d] = data[d] !== ""
+                        }
+                    }
+                }
+
+                formDataNo += 1
             }
-        }catch(e){
-            console.log(e)
-            this.schema = []
-            this.name = ""
         }
 
         this.state = {
             fontSize:Constants.fontSize, 
             fontSizeTitle: Constants.fontSizeTitle,
             boolean_checked:boolean_checked,
-            ignoreSection:ignoreSection
         }
     }
 
@@ -82,19 +76,7 @@ class CustomForm extends React.Component {
             localStorage.setItem(savedDataName, localstr)
         } else{
             formData = JSON.parse(formData);
-            formData = formData[this.props.activeKey]
-
-            if(formData === undefined){
-                formData = formHandler.form_names[this.props.form_name].formData
-                let l = {formData:formData, title:this.props.form_name, form_name:this.props.form_name}
-                let localstr = localStorage.getItem(savedDataName)
-                localstr = JSON.parse(localstr);
-                localstr[this.props.activeKey] = l
-                localstr = JSON.stringify(localstr)
-                localStorage.setItem(savedDataName, localstr)
-            } else{
-                formData = formData.formData
-            }
+            formData = formData[this.props.activeKey].formData
         }
         return formData
     }
@@ -144,17 +126,19 @@ class CustomForm extends React.Component {
             formData[formNo].data[formDataNo][dataNo] = e.target.checked
             return
         }
+        if(checkType==="boolean section"){
+            if(e.target.checked){
+                this.props.addReferalGuideSectionToTab(sectionNo, formNo, formDataNo)
+            } else{
+                let isSection = true
+                this.props.openDeleteTabNotification([sectionNo, this.props.activeKey], isSection)
+            }
+            
+            return
+        }
         formData[formNo].data[formDataNo] = e.target.checked
         this.saveFormData(formData)
-        if(checkType==="boolean section"){
-            let ignoreSection = this.state.ignoreSection
-            if(e.target.checked){
-                ignoreSection.splice(ignoreSection.indexOf(sectionNo),1);
-            } else{
-                ignoreSection.push(sectionNo);
-            }
-            this.setState({ignoreSection: ignoreSection})
-        }
+
     }
 
     checkboxWithInputOnChange = (e, key, boolean_checked, formNo, formDataNo) =>{
@@ -182,7 +166,7 @@ class CustomForm extends React.Component {
         let formData = this.getFormData()
         for (let formNo = 0; formNo < this.schema.length; formNo++){
             let section = this.schema[formNo].section
-            if (section !== undefined && this.state.ignoreSection.includes(section)){
+            if (section !== undefined){
                 continue
             }
             
@@ -200,7 +184,6 @@ class CustomForm extends React.Component {
             }
             
             let properties = this.schema[formNo].properties
-
             let formprops = new FormProperties(properties,formNo,isPDF,fontSize,formData)
             let props_form = formprops.getFormProperties(this.state, this.inputOnChange.bind(this), 
                 this.saveTableData.bind(this), this.checkboxOnChange.bind(this), 

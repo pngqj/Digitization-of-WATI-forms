@@ -34,7 +34,7 @@ class FormProperties{
         }
 
         return(
-            <Checkbox.Group key={key} style={{width:"100%"}} defaultValue={tagGroupData}>
+            <Checkbox.Group key={key} style={{width:"100%"}} value={tagGroupData}>
                     {row}
             </Checkbox.Group>
         )
@@ -75,7 +75,7 @@ class FormProperties{
                 if(!is_long){
                     input = <Input addonBefore={title} addonAfter={after} type={string_type} onChange={(e)=>inputOnChange(e, formDataNo_copy, this.formNo, undefined)} key={key} style={style} size={this.size} defaultValue={data}/>
                 } else{
-                    input = <TextArea onChange={(e)=>inputOnChange(e, formDataNo_copy, this.formNo, undefined)} key={key} style={style} size={this.size} autosize={{ minRows: 4, maxRows: 100 }} defaultValue={data}/>
+                    input = <TextArea onChange={(e)=>inputOnChange(e, formDataNo_copy, this.formNo, undefined)} key={key} style={style} size={this.size} autoSize={{ minRows: 4, maxRows: 100 }} defaultValue={data}/>
                 }
 
                 if(is_highlight){
@@ -196,7 +196,7 @@ class FormProperties{
                                         ''
                                     }
                                     <TextArea disabled={!checked} onChange={(e)=>inputOnChange(e, formDataNo_copy, this.formNo, undefined)} 
-                                        style={style} defaultValue={data} size={this.size} autosize={{ minRows: 4, maxRows: 100 }}></TextArea>
+                                        style={style} defaultValue={data} size={this.size} autoSize={{ minRows: 4, maxRows: 100 }}></TextArea>
                                 </Col> 
                         }                  
                     )
@@ -340,7 +340,7 @@ class FormProperties{
                             width = width.toString() + "%"
                             booleanString.push(
                                 <TextArea disabled={!checked} onChange={(e)=>inputOnChange(e, formDataNo_copy, this.formNo, dataNo)} 
-                                key={bs_key} style={{marginBottom:10,width:width}} size={this.size} autosize={{ minRows: 4, maxRows: 100 }} defaultValue={data[i]}/>
+                                key={bs_key} style={{marginBottom:10,width:width}} size={this.size} autoSize={{ minRows: 4, maxRows: 100 }} defaultValue={data[i]}/>
                             )
                         }
                     }
