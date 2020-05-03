@@ -33,11 +33,20 @@ class FormProperties{
             }
         }
 
-        return(
-            <Checkbox.Group key={key} style={{width:"100%"}} value={tagGroupData}>
-                    {row}
-            </Checkbox.Group>
-        )
+        let is_section = tagGroup.filter(item => item.is_section).length > 0
+        if(is_section){
+            return(
+                <Checkbox.Group key={key} style={{width:"100%"}} value={tagGroupData}>
+                        {row}
+                </Checkbox.Group>
+            )
+        } else{
+            return(
+                <Checkbox.Group key={key} style={{width:"100%"}} defaultValue={tagGroupData}>
+                        {row}
+                </Checkbox.Group>
+            )
+        }        
     }
 
     getFormProperties(state,inputOnChange,
@@ -116,6 +125,7 @@ class FormProperties{
                 }
                 tagGroup.push(
                     {
+                        is_section: type === "boolean section", 
                         span: span,
                         col: <Col key={key} span={span}>
                                 <Checkbox style={{marginBottom:10, fontSize: this.fontSize}}

@@ -16,7 +16,7 @@ class EditableTable extends React.Component {
         let title = value.hoverTitle
         title = title === undefined? "" : title
         return (
-          <Popover content={<p>{value.hover}</p>} title={title} trigger="hover">
+          <Popover placement="right" content={<p>{value.hover}</p>} title={title} trigger="hover">
             <span key={index}>{value.header}</span>
           </Popover>
         )
@@ -49,7 +49,6 @@ class EditableTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = { data: this.props.data, confirmDeleteModalVisible: false};
-    console.log(this.props.data)
   }
 
   save(value, index, row, dataIndex) {
@@ -132,7 +131,7 @@ class EditableTable extends React.Component {
       columns[c].render = (value, row, index) => {
         let cell = null
         if (columns[c].isHTML){
-          cell = (<div dangerouslySetInnerHTML={{__html: value}}></div>)
+          cell = (<div dangerouslySetInnerHTML={{__html: value.header}}></div>)
         } else {
           cell = this.getInput(columns[c], value, row, index)
         }

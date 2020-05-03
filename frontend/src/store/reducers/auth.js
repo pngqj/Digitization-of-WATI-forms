@@ -2,49 +2,45 @@ import * as actionConst from '../actions/actionConst';
 import { updateObject } from '../utility';
 
 const initialState = {
-    is_admin: false,
-    token: null,
     error: null, 
     username:null,
-    loading: false
+    verified: null
 }
 
 const authStart = (state, action) => {
     return updateObject(state, {
         error: null,
-        loading: true
+        username:null,
+        verified: null
     });
 }
 
 const authLoginSuccess = (state, action) => {
     return updateObject(state, {
-        is_admin: action.is_admin, 
-        token: action.token,
         username: action.username,
+        verified: action.verified,
         error: null,
-        loading: false
     });
 }
 
 const authSuccess = (state, action) => {
     return updateObject(state, {
         error: null,
-        loading: false
     });
 }
 
 const authFail = (state, action) => {
     return updateObject(state, {
         error: action.error,
-        loading: false
+        username: undefined,
+        verified: null
     });
 }
 
 const authLogout = (state, action) => {
     return updateObject(state, {
-        is_admin: false,
-        token: null,
-        username:null
+        username:undefined,
+        verified: null
     });
 }
 

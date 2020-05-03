@@ -12,6 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "antd": "^4.1.0",
+    "axios": "^0.19.2",
+    "crypto-js": "^4.0.0",
     "react": "^16.13.1",
     "react-app-polyfill": "^1.0.6",
     "react-dom": "^16.13.1",

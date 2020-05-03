@@ -1,16 +1,12 @@
 import authReducer from './auth';
-import tagReducer from './tags';
-import courseReducer from './course';
-import profReducer from './prof';
 import enlargeReducer from './enlarge';
+import formdataReducer from './formdata';
 import { combineReducers} from 'redux'
 
 const allReducers = combineReducers({
     auth: authReducer,
-    tag: tagReducer,
-    course: courseReducer,
-    prof: profReducer,
-    enlarge:enlargeReducer
+    enlarge: enlargeReducer,
+    formdata: formdataReducer
 })
 
 export default allReducers

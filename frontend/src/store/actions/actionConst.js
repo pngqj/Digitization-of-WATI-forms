@@ -5,21 +5,12 @@ export const AUTH_SUCCESS = 'AUTH_SUCCESS';
 export const AUTH_FAIL = 'AUTH_FAIL';
 export const AUTH_LOGOUT = 'AUTH_LOGOUT';
 
-// tags
-export const TAGS_DOWNLOADED = 'TAGS_DOWNLOADED';
-export const TAGS_ERROR = 'TAGS_ERROR';
-
-// course
-export const COURSE_DOWNLOADED = 'COURSE_DOWNLOADED';
-export const COURSE_ERROR = 'COURSE_ERROR';
-
-// course timetable
-export const TIMETABLE_DOWNLOADED = 'TIMETABLE_DOWNLOADED';
-export const TIMETABLE_ERROR = 'TIMETABLE_ERROR';
-
-// prof
-export const PROF_DOWNLOADED = 'PROF_DOWNLOADED';
-export const PROF_ERROR = 'PROF_ERROR';
+// formdata
+export const FORMDATA_START = 'FORMDATA_START';
+export const FORMDATA_DOWNLOADED = 'FORMDATA_DOWNLOADED';
+export const STUDENTLIST_START = 'STUDENTLIST_START';
+export const STUDENTLIST_DOWNLOADED = 'STUDENTLIST_DOWNLOADED';
+export const SHAREDTO_UPDATED = 'SHAREDTO_UPDATED';
 
 // login expiry
 export const DATA_EXPIRY_TIME = 5 * 60 * 1000 //5mins

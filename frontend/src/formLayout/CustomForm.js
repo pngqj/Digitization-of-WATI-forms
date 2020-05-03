@@ -1,13 +1,14 @@
 import React from 'react';
 import { Modal, message, Icon, Card, Button } from 'antd';
-import * as enlargeActions from '../../store/actions/enlarge';
+import * as enlargeActions from '../store/actions/enlarge';
 import { connect } from 'react-redux';
 import { render } from "react-dom";
 import ReactToPrint from "react-to-print";
-import * as Constants from '../../Constants'
-import * as formHandler from './FormHandler'
-import FormProperties from '../FormProperties';
+import * as Constants from '../Constants'
+import * as formHandler from './forms/FormHandler'
+import FormProperties from './FormProperties';
 import moment from 'moment';
+import * as EncryptString from '../EncryptString'
 
 
 class CustomForm extends React.Component {    
@@ -32,7 +33,7 @@ class CustomForm extends React.Component {
 
             for(let props in properties){
                 let type = properties[props].type
-                let section = properties[props].section
+                // let section = properties[props].section
                 const data = formData[formNo].data[formDataNo]
                 let key = formNo * 1000 + formDataNo + props
 
@@ -67,12 +68,13 @@ class CustomForm extends React.Component {
     getFormData(){
         let savedDataName = Constants.savedDataName 
         let formData = localStorage.getItem(savedDataName)
+        formData = EncryptString.decrypt(formData)
         if(formData === null){
             formData = formHandler.form_names[this.props.form_name].formData
             let l = {formData:formData, title:this.props.form_name, form_name:this.props.form_name}
             let localstr = {}
             localstr[this.props.activeKey] = l
-            localstr = JSON.stringify(localstr)
+            localstr = EncryptString.encrypt(JSON.stringify(localstr))
             localStorage.setItem(savedDataName, localstr)
         } else{
             formData = JSON.parse(formData);
@@ -84,9 +86,11 @@ class CustomForm extends React.Component {
     saveFormData(formData){
         let savedDataName = Constants.savedDataName 
         let localstr = localStorage.getItem(savedDataName)
+        localstr = EncryptString.decrypt(localstr)
         localstr = JSON.parse(localstr);
         localstr[this.props.activeKey].formData = formData
-        localStorage.setItem(savedDataName, JSON.stringify(localstr))
+        localStorage.setItem(savedDataName, EncryptString.encrypt(JSON.stringify(localstr)))
+        this.props.formDataEdited()
     }
 
     componentDidMount(){
@@ -164,7 +168,8 @@ class CustomForm extends React.Component {
     createForm = (fontSize, fontSizeTitle, isPDF) => {
         let forms = [<h1 key="form name">{this.name}</h1>]
         let formData = this.getFormData()
-        for (let formNo = 0; formNo < this.schema.length; formNo++){
+        for (let formNo = 0; formNo < formData.length; formNo++){ 
+        // for (let formNo = 0; formNo < this.schema.length; formNo++){ // old. 
             let section = this.schema[formNo].section
             if (section !== undefined){
                 continue
@@ -220,6 +225,20 @@ class CustomForm extends React.Component {
         return (
             <div>
                 {
+                    this.schema.length > 0 ?
+                    <div>
+                        <ReactToPrint
+                            key="2"
+                            trigger={() =><button style={{float:"right"}} onFocus={()=>this.saveData()} className="btn btn-primary">Download this form</button>}
+                            content={() => this.myRef}
+                            onAfterPrint={() => this.setState({isPDF:false})}
+                        />
+                    </div>
+                    :
+                    ''
+                }
+
+                {
                     this.state.isPDF?
                     <div className="PDF download" style={{visibility: "hidden", display: "none"}}>
                         <div style={{padding:50}} ref={el => (this.myRef = el)} >
@@ -231,26 +250,6 @@ class CustomForm extends React.Component {
                 }
                 
                 {this.createForm(this.state.fontSize, this.state.fontSizeTitle, false)}
-                
-                
-                {
-                    this.schema.length > 0 ?
-                    <div>
-                        <button className="btn btn-primary"
-                        // type="submit" onClick={()=>message.info("Coming Soon!")}>
-                        type="submit" onClick={()=>message.info("Coming Soon!")}>
-                            Save
-                        </button>
-                        <ReactToPrint
-                            key="2"
-                            trigger={() =><button onFocus={()=>this.saveData()} className="btn btn-primary">Download</button>}
-                            content={() => this.myRef}
-                            onAfterPrint={() => this.setState({isPDF:false})}
-                        />
-                    </div>
-                    :
-                    ''
-                }
             </div>
         )
     }

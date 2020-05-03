@@ -1,6 +1,8 @@
 import * as enlargeActions from '../store/actions/enlarge';
+import * as formdataActions from '../store/actions/formdata';
+import * as EncryptString from '../EncryptString';
+
 import { connect } from 'react-redux';
-import * as formHandler from './forms/FormHandler'
 import { Link} from 'react-router-dom';
 
 import React, { useContext, useState, useEffect, useRef } from 'react';
@@ -8,20 +10,21 @@ import { Table, Input, Button, Popconfirm, Form, Modal, message } from 'antd';
 import ButtonGroup from 'antd/lib/button/button-group';
 
 
-const StudentForm = ({ visible, onCancel, onOk, formData }) => {
+const StudentForm = ({ visible, onCancel, onOk, formData, is_edit }) => {
   const [form] = Form.useForm();
   form.setFieldsValue(formData)
   return (
     <Modal
       visible={visible}
-      title="Create a new collection"
-      okText="Create"
+      title="Create a new student record"
+      okText= {is_edit? "Edit" : "Create"}
       cancelText="Cancel"
       onCancel={onCancel}
       onOk={() => {
         form
           .validateFields()
           .then(values => {
+            form.resetFields()
             onOk(values)
           })
           .catch(info => {
@@ -36,7 +39,7 @@ const StudentForm = ({ visible, onCancel, onOk, formData }) => {
       >
        <Form.Item
           label="Student's Name"
-          name="name"
+          name="student_name"
           rules={[{ required: true, message: "Please input the Student's Name!" }]}
         >
           <Input />
@@ -44,7 +47,7 @@ const StudentForm = ({ visible, onCancel, onOk, formData }) => {
 
         <Form.Item
           label="Age"
-          name="age"
+          name="student_age"
           rules={[{ required: true, message: "Please input the Student's Age!" }]}
         >
           <Input type="number"/>
@@ -52,7 +55,7 @@ const StudentForm = ({ visible, onCancel, onOk, formData }) => {
 
         <Form.Item
           label="School"
-          name="school"
+          name="student_school"
           rules={[{ required: true, message: "Please input the School!" }]}
         >
           <Input />
@@ -62,83 +65,109 @@ const StudentForm = ({ visible, onCancel, onOk, formData }) => {
   );
 };
 
-class FormManagement extends React.Component {
+
+class StudentManagement extends React.Component {
   constructor(props) {
     super(props);
     this.columns = [
       {
         title: "Student's Name",
-        dataIndex: 'name',
-        width: '30%',
+        dataIndex: 'student_name',
       },
       {
         title: 'Age',
-        dataIndex: 'age',
+        dataIndex: 'student_age',
       },
       {
         title: 'School',
-        dataIndex: 'school',
+        dataIndex: 'student_school',
+      },
+      {
+        title: 'Owner',
+        dataIndex: 'owner_username',
+      },
+      {
+        title: 'Last Updated On',
+        dataIndex: 'last_updated_date',
       },
       {
         title: 'operation',
         dataIndex: 'operation',
-        render: (text, record) =>
-          this.state.dataSource.length >= 1 ? (
+        render: (text, record) => {
+          delete record.last_updated_date
+          delete record.key
+          const link = "/forms/" + EncryptString.encrypt(JSON.stringify(record))
+          
+          return (this.state.dataSource.length >= 1 ? (
             <ButtonGroup>
               <Button type="primary">
-              <Link to={"/forms/" + record.name}>View Forms</Link>
+              <Link to={link}>View Forms</Link>
               </Button>
-              <Button onClick={() => this.showModal(record)}>Edit</Button>
-              <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.key)}>
-                <Button type="danger">Delete</Button>
-              </Popconfirm>
+              {
+                record.owner_username === this.props.username?
+                <>
+                <Button onClick={() => this.showModal(record, true)}>Edit</Button>
+                <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record)}>
+                  <Button type="danger">Delete</Button>
+                </Popconfirm>
+                </>
+                :
+                ''
+              }
+              
             </ButtonGroup>
             
-          ) : null,
+          ) : null)
+        }
+        
+          
       },
     ];
     this.state = {
-      dataSource: [
-        {
-          key: '0',
-          name: 'Edward Lim',
-          age: '10',
-          school: 'XXX Primary School',
-        },
-        {
-          key: '1',
-          name: 'John Tan',
-          age: '13',
-          school: 'YYY Secondary School',
-        },
-      ],
       studentModalVisible:false,
     };
+    this.props.getStudentList()
   }
 
-  showModal = (record) =>{
+  componentWillReceiveProps(nextProps){
+    let studentList = nextProps.studentList
+    studentList = studentList.map((item, index) => {
+      item.last_updated_date = item.last_updated_date.replace("T", " ")
+      item.last_updated_date = item.last_updated_date.split(".")[0]
+      item.key = index
+      delete item.shared_to
+      delete item.activeKey
+      delete item.newTabIndex
+      delete item.$init
+      return item
+    } )
+    
+    this.setState({dataSource:studentList})
+  }
+
+  showModal = (record, is_edit) =>{
     this.setState({
       formData:record,
       key:record.key,
-      studentModalVisible:true
+      studentModalVisible:true,
+      is_edit:is_edit,
+      oldRecord: is_edit? record : null
     })
   }
 
-  handleDelete = key => {
-    const dataSource = [...this.state.dataSource];
-    this.setState({
-      dataSource: dataSource.filter(item => item.key !== key),
-    });
+  handleDelete = oldRecord => {
+    delete oldRecord.key
+    delete oldRecord.last_updated_date
+    this.props.deleteStudent(oldRecord)
   };
 
   handleAdd = () => {
     const newData = {
-      key: null,
       name: null,
       age: null,
       school: null,
     };
-    this.showModal(newData)
+    this.showModal(newData, false)
   };
 
   handleSave = row => {
@@ -176,13 +205,17 @@ class FormManagement extends React.Component {
           visible={this.state.studentModalVisible}
           formData={this.state.formData}
           onCancel={() => {this.setState({studentModalVisible:false})}}
+          is_edit={this.state.is_edit}
           onOk={(newRecord)=>{
-            let key = this.state.key
-            let dataSource = this.state.dataSource
-            key = key === null ? dataSource.length :key
-            newRecord["key"] = key
-            dataSource[key] = newRecord
-            this.setState({dataSource:[...dataSource], studentModalVisible:false})
+            this.setState({studentModalVisible:false})
+            if(this.state.is_edit){
+              let oldRecord = this.state.oldRecord
+              delete oldRecord.last_updated_date
+              delete oldRecord.key
+              this.props.editStudent(oldRecord, newRecord)
+            } else {
+              this.props.addFormdata(newRecord)
+            }
           }}
         />
         
@@ -193,7 +226,7 @@ class FormManagement extends React.Component {
             marginBottom: 16,
           }}
         >
-          Add a row
+          Add a Student
         </Button>
         <Table
           rowClassName={() => 'editable-row'}
@@ -209,15 +242,21 @@ class FormManagement extends React.Component {
 const mapStateToProps = state => {
   return {
     isEnlarge: state.enlarge,
+    studentList: state.formdata.studentList,
+    username: state.auth.username,
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
+    getStudentList: () => dispatch(formdataActions.getStudentList()),
+    addFormdata: (student_data) => dispatch(formdataActions.addFormdata(student_data)),
+    editStudent: (oldRecord, newRecord) => dispatch(formdataActions.editStudent(oldRecord, newRecord)),
+    deleteStudent: (oldRecord) => dispatch(formdataActions.deleteStudent(oldRecord)),
     getEnlarge: () => dispatch(enlargeActions.getEnlarge()),
     updateEnlarge: (isEnlarge) => dispatch(enlargeActions.updateEnlarge(isEnlarge))
   }
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(FormManagement);
+export default connect(mapStateToProps, mapDispatchToProps)(StudentManagement);
