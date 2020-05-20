@@ -55,7 +55,7 @@ export const authLogin = (username, password, remember) => {
         localStorage.setItem('remember', remember? "true": "false");
         localStorage.setItem(constants.username_secret, EncryptString.encrypt(username));
         localStorage.setItem(constants.password_secret, EncryptString.encrypt(password));
-        dispatch(refreshToken(0, username, password))
+        dispatch(refreshToken(0, username, password, true))
     }
 }
 
@@ -163,12 +163,12 @@ export const authCheckState = () => {
         } else {
             username = EncryptString.decrypt(username)
             password = EncryptString.decrypt(password)
-            dispatch(refreshToken(0, username, password))
+            dispatch(refreshToken(0, username, password, true))
         }
     }
 }
 
-export const refreshToken = (refresh_time, username, password) => {
+export const refreshToken = (refresh_time, username, password, displayMsg) => {
     return dispatch => {
         setTimeout(() => {
             dispatch(authStart());
@@ -177,11 +177,15 @@ export const refreshToken = (refresh_time, username, password) => {
                 password: password
             }).then(res => {
                 dispatch(authLoginSuccess(username, true));
-                dispatch(refreshToken(constants.refresh_time, username, password)) 
+                dispatch(refreshToken(constants.refresh_time, username, password, false)) 
+                if(displayMsg){
+                    message.success("Login Success!")
+                }
             })
             .catch(err => {
-                dispatch(logout());
+                // dispatch(logout());
                 console.log(err)
+                message.error("Login Error!")
             })
         }, refresh_time)
     }

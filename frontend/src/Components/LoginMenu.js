@@ -153,8 +153,9 @@ class LoginMenu extends React.Component {
                 name="normal_login"
                 className="login-form"
                 initialValues={{
-                    username:"qunjia",
-                    password:"1234567Aa!",
+                    // test values
+                    // username:"qunjia",
+                    // password:"1234567Aa!",
                     remember: true,
                 }}
                 onFinish={this.onLoginFinish}
@@ -245,7 +246,7 @@ class LoginMenu extends React.Component {
                 {this.agreementModel(this.state.agreementModelVisible)}
                 {this.resendEmailModel(this.state.resendEmailModelVisible)}
                 <h2 style={{marginTop:"5%", color:"#ffffff", textAlign:"center"}}>W.A.T.I. Assessment Forms</h2>
-                <div style={{background:"#ffffff", height:this.state.isSignUp? "70%":"45%", width:"33%", position: "fixed", left: "33%", top: "20%"}}>
+                <div style={{background:"#ffffff", height:this.state.isSignUp? "75%":"45%", width:"33%", position: "fixed", left: "33%", top: "20%"}}>
                     {
                         this.state.isSignUp? this.signUpForm : this.loginForm
                     }
