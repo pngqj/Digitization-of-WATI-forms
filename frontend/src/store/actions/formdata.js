@@ -142,20 +142,13 @@ export const deleteStudent = (oldRecord) => {
     }
 }
 
-export const editFormdata = (student_data) => {
+export const editFormdata = (student_data, formData, activeKey, newTabIndex) => {
     return dispatch => {
-        let savedData = localStorage.getItem(constants.savedDataName)
-        let savedActiveKey = localStorage.getItem(constants.savedActiveKey)
-        let savedTabIndex = localStorage.getItem(constants.savedTabIndex)
-
-        savedData = EncryptString.decrypt(savedData)
-        savedData = JSON.parse(savedData);
-
         axios.post(constants.host_link + '/formdata/edit_formdata/', {
             record: student_data,
-            formdata: savedData,
-            activeKey: savedActiveKey, 
-            newTabIndex: savedTabIndex
+            formdata: formData,
+            activeKey: activeKey, 
+            newTabIndex: newTabIndex
         })
         .then(res => {
             message.success("Saved!")

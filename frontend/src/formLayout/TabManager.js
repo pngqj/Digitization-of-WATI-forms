@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tabs, Modal, notification, Checkbox, Button, Input, message } from 'antd';
+import { Tabs, Modal, notification, Checkbox, Button, Input, message, Popover, Tooltip } from 'antd';
 import * as enlargeActions from '../store/actions/enlarge';
 import * as actions from '../store/actions/formdata';
 import { connect } from 'react-redux';
@@ -8,6 +8,7 @@ import * as Constants from '../Constants'
 import * as EncryptString from '../EncryptString'
 import * as FormHandler from './forms/FormHandler'
 import {
+  PlusOutlined,
   EditOutlined,
   SaveOutlined,
   ShareAltOutlined
@@ -25,8 +26,13 @@ class TabManager extends React.Component {
         let record = window.location.pathname.replace("/forms/", "")
         record = EncryptString.decrypt(record)
         record = JSON.parse(record)
+        console.log(record)
+        this.student_name = record.student_name
+        this.student_school = record.student_school
+        this.student_age = record.student_age
         this.props.getFormData(record)
         this.state = {
+          formData:{},
           addTabModalVisible:false,
           leavingPrompt:false,
           panes:[],
@@ -42,16 +48,14 @@ class TabManager extends React.Component {
         }
 
         this.newTabIndex = nextprops.newTabIndex 
-        const formdata = nextprops.formdata
-        const formdataString = EncryptString.encrypt(JSON.stringify(formdata))
-        localStorage.setItem(Constants.savedDataName, formdataString)
-        localStorage.setItem(Constants.savedTabIndex, nextprops.newTabIndex)
+        console.log(nextprops)
 
-        let panes = this.getPanes ()
+        let panes = this.getPanes(nextprops.formdata)
         let addTabModalVisible = panes.length == 0
 
         this.setState({
             activeKey: nextprops.activeKey,
+            formData: nextprops.formdata,
             panes: panes,
             addTabModalVisible:addTabModalVisible,
             editTabNameModelVisible:false,
@@ -67,16 +71,12 @@ class TabManager extends React.Component {
         }
       }
 
-      getPanes(){
+      getPanes(formData){
         let panes = []
-        let savedData = localStorage.getItem(Constants.savedDataName)
-        savedData = savedData === null? null : EncryptString.decrypt(savedData)
-        if (savedData !== null){
-            savedData = JSON.parse(savedData);
-            
-            for(let key in savedData){
-                let title = savedData[key].title
-                let form_name = savedData[key].form_name
+        if (formData !== null ){
+            for(let key in formData){
+                let title = formData[key].title
+                let form_name = formData[key].form_name
 
                 panes.push({ title: title, content: 
                     <CustomForm 
@@ -85,19 +85,19 @@ class TabManager extends React.Component {
                       addReferalGuideSectionToTab = {this.addReferalGuideSectionToTab.bind(this)}
                       activeKey={key} 
                       form_name={form_name}
+                      formData={formData}
                     />, key: key });
             }
         }
         return panes
       }
 
-      formDataEdited = () =>{
-        this.setState({leavingPrompt:true})
+      formDataEdited = (formData) =>{
+        this.setState({leavingPrompt:true, formData: formData})
       }
     
       onChange = activeKey => {
         this.setState({ activeKey });
-        localStorage.setItem(Constants.savedActiveKey, activeKey)
       };
     
       onEdit = (targetKey, action) => {
@@ -108,41 +108,65 @@ class TabManager extends React.Component {
           this.setState({addTabModalVisible:true})
       }
 
+      autoPopulate = (formName, formData) => {
+        if (formName === "Referral/Question Identification Guide"){
+          formData[0].data[0] = this.student_name
+          formData[0].data[2] = this.student_age
+          formData[0].data[3] = this.student_school
+        }
+        else if (formName === "WATI Assistive Technology Trial Use Summary"){
+          formData[0].data[0] = this.student_name
+          formData[0].data[1] = this.student_age
+        }
+        else if (formName === "WATI Assistive Technology Trial Use Guide"){
+          formData[1].data[0] = this.student_name
+          formData[1].data[2] = this.student_age
+          formData[1].data[3] = this.student_school
+        }
+        else if (formName === "Environmental Observation Guide"){
+          formData[0].data[0] = this.student_name
+          formData[0].data[1] = this.student_school
+        }
+        else if (formName === "WATI Assistive Technology Assessment Directions/Procedure Guide"){
+          formData[0].data[2] = this.student_name
+          formData[0].data[1] = this.student_school
+        }
+        else if (formName === "WATI Assistive Technology Consideration Guide"){
+          formData[0].data[0] = this.student_name
+          formData[0].data[1] = this.student_school
+        }
+        
+      }
+
       addFormsToTab = () =>{
         let activeKey = `newTab${this.newTabIndex}`;
+        let formData = this.state.formData
+        console.log(formData)
         for(let k in this.state.selectedForms){
             activeKey = `newTab${++this.newTabIndex}`;
             let form_name = this.state.selectedForms[k]
-            let formData = FormHandler.form_names[form_name].formData
-            let l = {formData:formData, title:form_name, form_name:form_name}
-            let savedData = localStorage.getItem(Constants.savedDataName)
-            savedData = EncryptString.decrypt(savedData)
-            savedData = JSON.parse(savedData);
-            savedData = savedData === null? {} : savedData
-            savedData[activeKey] = l
-            savedData = EncryptString.encrypt(JSON.stringify(savedData))
-            localStorage.setItem(Constants.savedDataName, savedData)
+            let newFormData = FormHandler.form_names[form_name].formData
+            this.autoPopulate(form_name, newFormData)
+            let l = {formData:newFormData, title:form_name, form_name:form_name}
+            formData = formData === null? {} : formData
+            formData[activeKey] = l
         }
-        localStorage.setItem(Constants.savedActiveKey, activeKey)
-        localStorage.setItem(Constants.savedTabIndex, this.newTabIndex)
-        let panes = this.getPanes()
-        this.setState({ panes, activeKey, addTabModalVisible:false, selectedForms: [], leavingPrompt:true});
+        let panes = this.getPanes(this.state.formData)
+        this.setState({ panes, activeKey, formData, addTabModalVisible:false, selectedForms: [], leavingPrompt:true});
       }
 
       addReferalGuideSectionToTab = (sectionNo, formNo, formDataNo) =>{
         let { activeKey} = this.state;
-        let savedData = localStorage.getItem(Constants.savedDataName)
-        savedData = EncryptString.decrypt(savedData)
-        savedData = JSON.parse(savedData);
+        let formData = this.state.formData
         try{
-          savedData[activeKey].formData[formNo].data[formDataNo] = true
+          formData[activeKey].formData[formNo].data[formDataNo] = true
         } catch{
           let key = activeKey.split("|")[0]
-          savedData[key].formData[formNo].data[formDataNo] = true
+          formData[key].formData[formNo].data[formDataNo] = true
         }
         let sectionName = `Section ${sectionNo}`;
         let newKey = `newTab${++this.newTabIndex}`;
-        let form_name = "Referral/Question Identification Guide " + sectionName
+        let form_name = "Student Information Guide " + sectionName
 
         let l = {
           formData:FormHandler.referral_Guide_Sections[sectionName].formData, 
@@ -152,15 +176,10 @@ class TabManager extends React.Component {
           formNo:formNo,
           formDataNo:formDataNo
         }
-        // savedData = savedData === null? {} : savedData
-        savedData[newKey] = l
-        savedData = EncryptString.encrypt(JSON.stringify(savedData))
-
-        localStorage.setItem(Constants.savedDataName, savedData)
-        localStorage.setItem(Constants.savedActiveKey, newKey)
-        localStorage.setItem(Constants.savedTabIndex, this.newTabIndex)
-        let panes = this.getPanes()
-        this.setState({ panes, leavingPrompt:true}); 
+        // formData = formData === null? {} : formData
+        formData[newKey] = l
+        let panes = this.getPanes(this.state.formData)
+        this.setState({ panes, formData, leavingPrompt:true}); 
         this.openAddSectionNotification(newKey)
       }
 
@@ -209,22 +228,18 @@ class TabManager extends React.Component {
         } catch{}
 
 
-        let savedData = localStorage.getItem(Constants.savedDataName)
-        savedData = EncryptString.decrypt(savedData)
-        savedData = JSON.parse(savedData);
+        let formData = this.state.formData
         if(isSection){
-          let formNo = savedData[`newTab${removeKey}`].formNo
-          let formDataNo = savedData[`newTab${removeKey}`].formDataNo
-          let mainFormKey = savedData[`newTab${removeKey}`].mainFormKey
+          let formNo = formData[`newTab${removeKey}`].formNo
+          let formDataNo = formData[`newTab${removeKey}`].formDataNo
+          let mainFormKey = formData[`newTab${removeKey}`].mainFormKey
 
-          savedData[mainFormKey].formData[formNo].data[formDataNo] = false
+          formData[mainFormKey].formData[formNo].data[formDataNo] = false
         }
-        delete savedData[`newTab${removeKey}`]
+        delete formData[`newTab${removeKey}`]
 
-        savedData = EncryptString.encrypt(JSON.stringify(savedData))
-        localStorage.setItem(Constants.savedDataName, savedData)
 
-        let newPanes = this.getPanes()
+        let newPanes = this.getPanes(this.state.formData)
         let addTabModalVisible = newPanes.length === 0
         if(newPanes.length === 0){
           activeKey = null
@@ -244,8 +259,7 @@ class TabManager extends React.Component {
             lastKey = panes[index].key
           }
         }
-        localStorage.setItem(Constants.savedActiveKey, activeKey)
-        this.setState({ panes:newPanes, activeKey, addTabModalVisible, leavingPrompt:true });
+        this.setState({ panes:newPanes, formData, activeKey, addTabModalVisible, leavingPrompt:true });
       }
 
       openDeleteTabNotification = (removeKey, isSection) => {
@@ -299,12 +313,9 @@ class TabManager extends React.Component {
 
         this.setState({panes:panes, editTabNameModelVisible:false, leavingPrompt:true})
 
-        let savedData = localStorage.getItem(Constants.savedDataName)
-        savedData = EncryptString.decrypt(savedData)
-        savedData = JSON.parse(savedData);
-        savedData[this.state.activeKey].title = this.state.tabName
-        savedData = EncryptString.encrypt(JSON.stringify(savedData))
-        localStorage.setItem(Constants.savedDataName, savedData)
+        let formData = this.state.formData
+        formData[this.state.activeKey].title = this.state.tabName
+        this.setState(formData)
       }
     
       render() {
@@ -355,26 +366,39 @@ class TabManager extends React.Component {
           <Tabs
             onChange={this.onChange}
             activeKey={this.state.activeKey}
+            hideAdd
             type="editable-card"
             onEdit={this.onEdit}
             tabBarExtraContent={(
               <ButtonGroup>
-                <Button onClick={()=>{
-                  this.props.editFormdata(this.props.student_data)
-                  this.setState({leavingPrompt:false})
-                  }} 
-                  style={{marginLeft:"2px", padding:0, height:"20px", width:"20px"}}>
-                <SaveOutlined type="edit" style={{fontSize:"12px", position: "absolute", top: "10%", left:"15%"}}></SaveOutlined>
-                </Button>
-                <Button onClick={this.showEditTabNameModel} style={{marginLeft:"2px", padding:0, height:"20px", width:"20px"}}>
-                  <EditOutlined type="edit" style={{fontSize:"12px", position: "absolute", top: "10%", left:"15%"}}></EditOutlined>
-                </Button>
+                <Tooltip placement="topLeft" title="Add">
+                  <Button onClick={this.add} style={{marginLeft:"2px", padding:0, height:"20px", width:"20px"}}>
+                    <PlusOutlined type="edit" style={{fontSize:"12px", position: "absolute", top: "10%", left:"15%"}}></PlusOutlined>
+                  </Button>
+                </Tooltip>
+                <Tooltip placement="topLeft" title="Save">
+                  <Button onClick={()=>{
+                    this.props.editFormdata(this.props.student_data, this.state.formData, this.state.activeKey, this.newTabIndex)
+                    this.setState({leavingPrompt:false})
+                    }} 
+                    style={{marginLeft:"2px", padding:0, height:"20px", width:"20px"}}>
+                  <SaveOutlined type="edit" style={{fontSize:"12px", position: "absolute", top: "10%", left:"15%"}}></SaveOutlined>
+                  </Button>
+                </Tooltip>
+                
+                <Tooltip placement="topLeft" title="Edit">
+                  <Button onClick={this.showEditTabNameModel} style={{marginLeft:"2px", padding:0, height:"20px", width:"20px"}}>
+                    <EditOutlined type="edit" style={{fontSize:"12px", position: "absolute", top: "10%", left:"15%"}}></EditOutlined>
+                  </Button>
+                </Tooltip>
                 
                 {
                   this.props.is_owner_of_form?
-                  <Button onClick={() => this.setState({shareToModelVisible:true})} style={{marginLeft:"2px", padding:0, height:"20px", width:"20px"}}>
-                    <ShareAltOutlined type="edit" style={{fontSize:"12px", position: "absolute", top: "10%", left:"15%"}}></ShareAltOutlined>
-                  </Button>
+                  <Tooltip placement="topLeft" title="Share">
+                    <Button onClick={() => this.setState({shareToModelVisible:true})} style={{marginLeft:"2px", padding:0, height:"20px", width:"20px"}}>
+                      <ShareAltOutlined type="edit" style={{fontSize:"12px", position: "absolute", top: "10%", left:"15%"}}></ShareAltOutlined>
+                    </Button>
+                  </Tooltip>
                   :
                   ''
                 }
@@ -406,7 +430,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
       getFormData: (record) => dispatch(actions.getFormdata(record)),
-      editFormdata: (student_data) => dispatch(actions.editFormdata(student_data))
+      editFormdata: (student_data, formData, activeKey, newTabIndex) => dispatch(actions.editFormdata(student_data, formData, activeKey, newTabIndex))
   }
 }
 

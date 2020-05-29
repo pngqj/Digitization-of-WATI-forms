@@ -15,14 +15,16 @@ class CustomForm extends React.Component {
     constructor(props) {
         super(props);
         let boolean_checked = {}
-
-        let formData = this.getFormData()
+        console.log(formData)
+        let formData = this.props.formData[this.props.activeKey].formData
+        console.log(formData)
+        
         this.name = this.props.form_name
 
         try{
             this.schema = formHandler.form_names[this.props.form_name].schema
         } catch {
-            let scetionName = this.props.form_name.replace("Referral/Question Identification Guide ", "")
+            let scetionName = this.props.form_name.replace("Student Information Guide ", "")
             this.schema = formHandler.referral_Guide_Sections[scetionName].schema
         }
         
@@ -34,6 +36,8 @@ class CustomForm extends React.Component {
             for(let props in properties){
                 let type = properties[props].type
                 // let section = properties[props].section
+                
+        console.log(formNo)
                 const data = formData[formNo].data[formDataNo]
                 let key = formNo * 1000 + formDataNo + props
 
@@ -65,32 +69,10 @@ class CustomForm extends React.Component {
         }
     }
 
-    getFormData(){
-        let savedDataName = Constants.savedDataName 
-        let formData = localStorage.getItem(savedDataName)
-        formData = EncryptString.decrypt(formData)
-        if(formData === null){
-            formData = formHandler.form_names[this.props.form_name].formData
-            let l = {formData:formData, title:this.props.form_name, form_name:this.props.form_name}
-            let localstr = {}
-            localstr[this.props.activeKey] = l
-            localstr = EncryptString.encrypt(JSON.stringify(localstr))
-            localStorage.setItem(savedDataName, localstr)
-        } else{
-            formData = JSON.parse(formData);
-            formData = formData[this.props.activeKey].formData
-        }
-        return formData
-    }
-
-    saveFormData(formData){
-        let savedDataName = Constants.savedDataName 
-        let localstr = localStorage.getItem(savedDataName)
-        localstr = EncryptString.decrypt(localstr)
-        localstr = JSON.parse(localstr);
-        localstr[this.props.activeKey].formData = formData
-        localStorage.setItem(savedDataName, EncryptString.encrypt(JSON.stringify(localstr)))
-        this.props.formDataEdited()
+    saveFormData(newformData){
+        let formData = this.props.formData
+        formData[this.props.activeKey].formData = newformData
+        this.props.formDataEdited(formData)
     }
 
     componentDidMount(){
@@ -98,13 +80,13 @@ class CustomForm extends React.Component {
     }
 
     saveTableData = (formNo, formDataNo, newData) => {
-        let formData = this.getFormData()
+        let formData = this.props.formData[this.props.activeKey].formData
         formData[formNo].data[formDataNo] = newData
         this.saveFormData(formData)
     }
 
     inputOnChange = (e, formDataNo, formNo, dataNo) =>{
-        let formData = this.getFormData()
+        let formData = this.props.formData[this.props.activeKey].formData
         if (dataNo !== undefined){
             if( Array.isArray(dataNo) ){
                 formData[formNo].data[formDataNo][dataNo[0]][dataNo[1]] = e.target.value
@@ -125,7 +107,7 @@ class CustomForm extends React.Component {
     }
 
     checkboxOnChange = (e, checkType, formNo, formDataNo, sectionNo, dataNo)=>{
-        let formData = this.getFormData()
+        let formData = this.props.formData[this.props.activeKey].formData
         if(checkType==="switch" && dataNo !== undefined){
             formData[formNo].data[formDataNo][dataNo] = e.target.checked
             return
@@ -146,7 +128,7 @@ class CustomForm extends React.Component {
     }
 
     checkboxWithInputOnChange = (e, key, boolean_checked, formNo, formDataNo) =>{
-        let formData = this.getFormData()
+        let formData = this.props.formData[this.props.activeKey].formData
         if (!e.target.checked){
             if(typeof formData[formNo].data[formDataNo] === "string"){
                 formData[formNo].data[formDataNo] = ""
@@ -167,7 +149,7 @@ class CustomForm extends React.Component {
 
     createForm = (fontSize, fontSizeTitle, isPDF) => {
         let forms = [<h1 key="form name">{this.name}</h1>]
-        let formData = this.getFormData()
+        let formData = this.props.formData[this.props.activeKey].formData
         for (let formNo = 0; formNo < formData.length; formNo++){ 
         // for (let formNo = 0; formNo < this.schema.length; formNo++){ // old. 
             let section = this.schema[formNo].section

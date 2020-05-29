@@ -20,10 +20,6 @@ export const blue_color="#1890FF"
 
 export const dateFormat = 'DD/MM/YYYY'
 
-export const savedDataName = '@sd$%T%Gv4#d3d'
-export const savedActiveKey = 'activeKey'
-export const savedTabIndex = 'savedTabIndex'
-
 export const refresh_time = 55 * 60 * 1000 //55 min
 export const username_secret = "!D45f3qXnU6$fh%"
 export const password_secret = "AXVr#46$3G6$fvT"

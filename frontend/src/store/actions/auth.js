@@ -140,7 +140,8 @@ export const authSignup = (signupData) => {
             password: signupData.password,
         })
         .then(res => {
-            message.success("Sign Up Success! Check Your email!")
+            // message.success("Sign Up Success! Check Your email!")
+            message.success("Sign Up Success!")
             dispatch(authSuccess())
             console.log(res)
         })

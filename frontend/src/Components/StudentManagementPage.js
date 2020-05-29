@@ -132,8 +132,6 @@ class StudentManagement extends React.Component {
   componentWillReceiveProps(nextProps){
     let studentList = nextProps.studentList
     studentList = studentList.map((item, index) => {
-      item.last_updated_date = item.last_updated_date.replace("T", " ")
-      item.last_updated_date = item.last_updated_date.split(".")[0]
       item.key = index
       delete item.shared_to
       delete item.activeKey

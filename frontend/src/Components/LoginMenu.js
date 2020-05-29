@@ -134,6 +134,7 @@ class LoginMenu extends React.Component {
                             e.preventDefault();
                             this.setState({agreementModelVisible:true})
                         }}>agreement</a>
+                    <a> </a>and understand and acknowledge the terms of use of this website.
                     </Checkbox>
                 </Form.Item>
                 <Form.Item>
@@ -214,12 +215,16 @@ class LoginMenu extends React.Component {
             footer = {[<Button key="1" type="primary" onClick={()=>this.setState({agreementModelVisible:false})}>Close</Button>]}
             onCancel={()=>this.setState({agreementModelVisible:false})}
             >
-            <p>(Insert Aggreement here)</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed commodo vel nisl eget efficitur. Donec commodo lacus nisl, non posuere ligula dictum eu. Nam lacinia feugiat orci at maximus. Nunc pharetra felis vitae enim tempor sodales. Etiam metus dolor, sodales at justo in, placerat euismod turpis. Pellentesque feugiat arcu et diam varius, ac placerat lectus volutpat. Aliquam pulvinar ultricies tempor. Praesent volutpat nulla nec libero elementum posuere. Curabitur at leo volutpat, dapibus elit at, molestie enim. Vivamus in eleifend lectus, tristique lacinia turpis. Morbi nec tellus erat. Nullam nec malesuada sem, aliquet tincidunt leo.</p>
-            <p>Aliquam id porttitor nisl. Mauris pharetra libero ac finibus fermentum. Praesent et libero odio. In maximus orci luctus, semper arcu accumsan, blandit urna. Phasellus auctor, dolor eu tempor vulputate, est turpis pulvinar nulla, tempor volutpat sem nisi quis ex. Curabitur et tellus vel neque laoreet venenatis. Nullam rhoncus metus at tellus cursus rutrum. Suspendisse varius imperdiet laoreet. Quisque sit amet congue libero, suscipit sodales velit. Phasellus imperdiet sem quis eleifend laoreet.</p>
-            <p>Quisque at facilisis mauris, a lobortis augue. Nam ut imperdiet quam. Sed efficitur suscipit feugiat. Donec at faucibus massa. Nunc sit amet urna ipsum. Sed lobortis mattis nulla. Vestibulum rutrum posuere ex, ut placerat metus rutrum in.</p>
-            <p>Sed vulputate vehicula diam, ut dignissim justo vestibulum malesuada. Fusce sit amet ante ultrices, faucibus neque a, dictum lectus. Nullam pellentesque molestie venenatis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla facilisi. Maecenas viverra laoreet lacinia. Curabitur auctor massa lectus, sed lacinia dui tempor vel. Suspendisse consequat eu massa et molestie. Sed fermentum ante ut facilisis volutpat. In hac habitasse platea dictumst. Maecenas mauris sapien, lacinia sed eros ut, volutpat efficitur diam. Donec commodo tellus sed ante consequat fermentum. Duis hendrerit purus eu condimentum commodo. Pellentesque a erat vel nunc sodales luctus. Phasellus vel tortor arcu. Vestibulum ac semper tortor.</p>
-        </Modal>
+            <p>
+                At NIE/NTU, we recognise our responsibility to protect the information you provide to us.
+            </p>
+            <p>
+                By continuing to use this website and by providing personal data (email address) to sign up for an account, you are consenting to NIE/NTU to use your personal data necessary for creation of your user account for use of this website. By entering personal data on this website, you are consenting to your personal data being used by NIE/NTU in this manner.
+            </p>
+            <p>
+                Use of the WATI assessment forms on this website may involve input of personal data (including sensitive personal data) pertaining to your students/clients. By entering the personal data on this website, you acknowledge that you have obtained consent from your students/clients for the collection, use and/or disclosure of their personal data in this manner. 
+            </p>
+            </Modal>
     )
 
     resendEmailModel = (visible) => (

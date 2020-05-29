@@ -13,6 +13,7 @@ const cookieExtractor = req => {
     token = req.cookies['access_token'];
     token = token === undefined? req.value.body.token : token
     token = token === "undefined"? req.value.body.token : token
+    token = token.replace("access_token=", "")
   }
   return token;
 }

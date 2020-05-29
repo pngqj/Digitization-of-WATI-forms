@@ -4,7 +4,7 @@ import * as enlargeActions from '../store/actions/enlarge';
 import { Link, withRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Menu, Modal, Input, Form, message } from 'antd';
-import { RollbackOutlined, UserOutlined } from '@ant-design/icons';
+import { RollbackOutlined, UserOutlined, InfoCircleOutlined } from '@ant-design/icons';
 const { SubMenu } = Menu;
 
 const ChangePasswordModel = ({ visible, onSubmit, onCancel }) => {
@@ -122,7 +122,7 @@ class NavBar extends React.Component {
                  <Menu onClick={this.handleClick} selectedKeys={[this.state.current]} mode="horizontal" theme="dark">
                     
                     {
-                        window.location.href.includes("forms/")?
+                        window.location.href.includes("forms/") || window.location.pathname === '/about'?
                         <Menu.Item key="back">
                         <RollbackOutlined />
                         <Link to={"/forms"}>Back to Main Page</Link>
@@ -130,7 +130,7 @@ class NavBar extends React.Component {
                         :
                         ''
                     }
-                    
+
                     <SubMenu
                         style={{float:"right"}}
                         title={
@@ -145,6 +145,10 @@ class NavBar extends React.Component {
                         <Menu.Item key="setting:2" onClick={()=> this.props.logout()}>Logout</Menu.Item>
                     </SubMenu>
                     
+                    <Menu.Item key="about" style={{float:"right"}}>
+                        <InfoCircleOutlined />
+                        <Link to={"/about"}>About</Link>
+                    </Menu.Item>
                 </Menu>
                 {this.props.children}
             </div>

@@ -5,8 +5,9 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
 mongoose.Promise = global.Promise;
-if (process.env.NODE_ENV === "test") {
-  mongoose.connect("mongodb+srv://queuejay:NIEtempDatabase2020@nietempdatabase-fdbbl.mongodb.net/test?retryWrites=true&w=majority", {
+const is_dev = false
+if (is_dev) {
+  mongoose.connect("mongodb://localhost:27017/test", {
     useNewUrlParser: true
   });
 } else {
@@ -46,7 +47,7 @@ app.use("/formdata", require("./routes/formdata"));
 
 // Handles any requests that don't match the ones above
 app.use(express.static(__dirname + '/build'));
-app.get('/wasd', (req,res) =>{
+app.get('*', (req,res) =>{
   res.sendFile(__dirname+'/build/index.html');
 });
 

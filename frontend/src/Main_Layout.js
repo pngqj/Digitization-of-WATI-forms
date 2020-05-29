@@ -6,7 +6,10 @@ import * as enlargeActions from './store/actions/enlarge';
 import * as constants from './Constants'
 import LoginMenu from './Components/LoginMenu';
 import NavBar from './Components/NavBar';
+import About from './Components/About';
 import { message } from 'antd';
+import TabManager from "./formLayout/TabManager";
+import StudentManagementPage from './Components/StudentManagementPage';
 
 class CustomLayout extends React.Component {
 
@@ -15,12 +18,34 @@ class CustomLayout extends React.Component {
 
         this.state = { 
             fontSizeMenu: constants.fontSizeMenu,
+            children:null
         };
+    }
+
+    selectChildren = () =>{
+        const pathname = window.location.pathname
+        let children = null
+        if(pathname.includes("forms") && pathname.length >6 ){
+            children = ( <TabManager {...this.props}/>)
+        } else if(pathname.includes("forms")){
+            children = (<StudentManagementPage {...this.props}/>)
+            window.onbeforeunload = undefined
+        } else if(pathname.includes("about")){
+            children = (<About {...this.props}/>)
+            window.onbeforeunload = undefined
+        }
+        this.setState({children})
     }
 
     componentDidMount(){
         this.props.getEnlarge()
+        this.selectChildren()
     }
+    componentDidUpdate(prevProps) {
+        if (this.props.location !== prevProps.location) {
+            this.selectChildren()
+        }
+      }
 
     componentWillReceiveProps(nextProps){
         if(nextProps.isEnlarge !== null){
@@ -41,10 +66,13 @@ class CustomLayout extends React.Component {
         // if user login or logout, change path
         if(nextProps.isAuthenticated !== this.props.isAuthenticated){
             if(nextProps.isAuthenticated){
-                if(!window.location.pathname.includes("/forms/")){
+                if(window.location.pathname === '/about'){
+                    //do nothing
+                } else if(!window.location.pathname.includes("/forms/")){
                     this.props.history.push('/forms')
-                }
-            } else {
+                } 
+            } 
+            else {
                 this.props.history.push('/login')
             }
         }
@@ -53,6 +81,7 @@ class CustomLayout extends React.Component {
   
   
     render() {
+        console.log(this.state.children)
         return (
             <NavBar>
             <div style={{margin:"5%"}}>
@@ -62,6 +91,7 @@ class CustomLayout extends React.Component {
                     :
                     <LoginMenu></LoginMenu>
                 }
+                {this.state.children}
             </div>
             
             </NavBar>

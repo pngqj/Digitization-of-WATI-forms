@@ -1,4 +1,5 @@
 const JWT = require('jsonwebtoken');
+const moment = require('moment');
 const EncryptString = require('../EncryptString');
 const User = require('../models/user');
 const Formdata = require('../models/formdata');
@@ -50,6 +51,7 @@ module.exports = {
     foundStudent.local.formdata = formdata
     foundStudent.local.activeKey = activeKey
     foundStudent.local.newTabIndex = newTabIndex
+    foundStudent.local.last_updated_date= Date.now()
     await foundStudent.save()
     res.json({ success: true});
   },
@@ -69,6 +71,8 @@ module.exports = {
         formdata = EncryptString.decrypt(formdata)
         formdata = JSON.parse(formdata)
         foundStudent.local.formdata = formdata
+      } else{
+        foundStudent.local.formdata = {}
       }
     }
 
@@ -86,6 +90,12 @@ module.exports = {
         
     foundStudentList = foundStudentList.map(a => a.local)
     foundStudentList = foundStudentList.map(({formdata, ...rest}) => rest)
+    foundStudentList = foundStudentList.map(a => {
+      const format = "DD/MM/YY HH:mm:ss "
+      a.last_updated_date = moment(a.last_updated_date).format(format).toString();
+      console.log(a.last_updated_date)
+      return a
+    })
     res.json({ success: true, studentList:foundStudentList });
 
   },

@@ -6,10 +6,10 @@ export const schema = [
         "properties": 
         {
             "Student's Name":{"type":"string", span:24}, 
-            "School":{type:"date", span:24}, 
-            "Observer":{type:"date", span:24}, 
+            "School":{type:"string", span:24}, 
+            "Observer":{type:"string", span:24}, 
             "Date of Observation":{type:"date", span:24}, 
-            "Type of class":{type:"date", span:24}, 
+            "Type of class":{type:"string", span:24}, 
             paragraph1: {type: "paragraph", span: 24, description: "Directions: Complete this Environmental Assessment Checklist before beginning "},
             paragraph2: {type: "paragraph", span: 24, description: ""},
             paragraph3: {type: "paragraph", span: 24, description: "Describe the environment: Record short responses in the space provided. "},

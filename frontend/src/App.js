@@ -5,10 +5,6 @@ import 'antd/dist/antd.css';
 import * as actions from './store/actions/auth';
 import Layout from './Main_Layout'
 
-import TabManager from "./formLayout/TabManager";
-import StudentManagementPage from './Components/StudentManagementPage';
-import { message } from 'antd';
-
 class App extends Component {
 
     componentDidMount() {
@@ -19,10 +15,7 @@ class App extends Component {
     render() {
         return ( 
         <BrowserRouter>
-            <Layout {...this.props}>
-                <Route exact path="/forms" component={() => <StudentManagementPage {...this.props}/>} />
-                <Route path="/forms/*" component={() => <TabManager {...this.props}/>} />
-            </Layout>
+            <Layout {...this.props}/>
         </BrowserRouter>
             );
         }

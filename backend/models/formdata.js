@@ -17,14 +17,12 @@ const formdataSchema = new Schema({
     // student's information
     student_name: {
         type: String,
-        lowercase: true
     },
     student_age: {
         type: Number,
     },
     student_school: {
         type: String,
-        lowercase: true
     },
 
     // form data and last updated date
