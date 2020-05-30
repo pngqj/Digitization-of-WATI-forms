@@ -25,15 +25,22 @@ class CustomLayout extends React.Component {
     selectChildren = () =>{
         const pathname = window.location.pathname
         let children = null
-        if(pathname.includes("forms") && pathname.length >6 ){
+
+        if (!this.props.isAuthenticated && pathname !== "/login"){
+            this.props.history.push('/login')
+        } else if(pathname.includes("forms") && pathname.length >6 ){
             children = ( <TabManager {...this.props}/>)
         } else if(pathname.includes("forms")){
             children = (<StudentManagementPage {...this.props}/>)
             window.onbeforeunload = undefined
-        } else if(pathname.includes("about")){
+        } else if(pathname === "/about"){
             children = (<About {...this.props}/>)
             window.onbeforeunload = undefined
+        } else if(pathname === "/login"){
+            children = (<LoginMenu {...this.props}/>)
+            window.onbeforeunload = undefined
         }
+
         this.setState({children})
     }
 
@@ -66,9 +73,7 @@ class CustomLayout extends React.Component {
         // if user login or logout, change path
         if(nextProps.isAuthenticated !== this.props.isAuthenticated){
             if(nextProps.isAuthenticated){
-                if(window.location.pathname === '/about'){
-                    //do nothing
-                } else if(!window.location.pathname.includes("/forms/")){
+                if(!window.location.pathname.includes("/forms/")){
                     this.props.history.push('/forms')
                 } 
             } 
@@ -84,16 +89,9 @@ class CustomLayout extends React.Component {
         console.log(this.state.children)
         return (
             <NavBar>
-            <div style={{margin:"5%"}}>
-                {
-                    this.props.isAuthenticated?
-                    this.props.children
-                    :
-                    <LoginMenu></LoginMenu>
-                }
-                {this.state.children}
-            </div>
-            
+                <div style={{margin:"5%"}}>
+                    {this.state.children}
+                </div>
             </NavBar>
         );
     }
