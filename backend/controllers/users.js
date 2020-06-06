@@ -100,12 +100,12 @@ module.exports = {
     const verified = user.local.verified
     const username = user.local.username
     
-    if (verified){
+    // if (verified){
       const token = signToken(user, null);
       res.cookie('access_token', token, {
         httpOnly: true
       });
-    }
+    // }
     
     res.status(200).json({ success: true, verified: verified, username: username});
   },

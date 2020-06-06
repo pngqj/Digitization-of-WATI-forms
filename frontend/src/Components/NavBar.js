@@ -4,7 +4,7 @@ import * as enlargeActions from '../store/actions/enlarge';
 import { Link, withRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Menu, Modal, Input, Form, message } from 'antd';
-import { RollbackOutlined, UserOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { RollbackOutlined, UserOutlined, InfoCircleOutlined, LoginOutlined, FormOutlined, HomeOutlined } from '@ant-design/icons';
 const { SubMenu } = Menu;
 
 const ChangePasswordModel = ({ visible, onSubmit, onCancel }) => {
@@ -109,6 +109,8 @@ class NavBar extends React.Component {
     }
 
     render() {
+        const textFontSize = {fontSize:"20px"}
+        const iconFontSize = {fontSize:"27px"}
         return (
             <div>
                 <ChangePasswordModel
@@ -119,10 +121,10 @@ class NavBar extends React.Component {
                         }}
                     onCancel={() => this.setState({changePasswordVisible:false})}
                 />
-                 <Menu onClick={this.handleClick} selectedKeys={[this.state.current]} mode="horizontal" theme="dark">
+                 <Menu style={{height:this.props.navBarHeight}} onClick={this.handleClick} selectedKeys={[this.state.current]} mode="horizontal" theme="dark">
                     
                     {
-                        window.location.href.includes("forms/") || window.location.pathname === '/about'?
+                        window.location.href.includes("forms/")?
                         <Menu.Item key="back">
                         <RollbackOutlined />
                         <Link to={"/forms"}>Back to Main Page</Link>
@@ -131,24 +133,37 @@ class NavBar extends React.Component {
                         ''
                     }
 
-                    <SubMenu
-                        style={{float:"right"}}
-                        title={
-                            <>
-                            <UserOutlined />
-                            {/* {this.props.username} */}
-                            {this.props.username}
-                            </>
-                        }
-                        >
-                        <Menu.Item key="setting:1" onClick={()=> this.setState({changePasswordVisible:true})}>Change Password</Menu.Item>
-                        <Menu.Item key="setting:2" onClick={()=> this.props.logout()}>Logout</Menu.Item>
-                    </SubMenu>
+                    {
+                        this.props.isAuthenticated?
+                        <SubMenu
+                            style={{float:"right"}}
+                            title={
+                                <>
+                                <UserOutlined style={iconFontSize}/>
+                                {/* {this.props.username} */}
+                                <a style={textFontSize}>{this.props.username}</a>
+                                </>
+                            }
+                            >
+                            <Menu.Item key="setting:1" onClick={()=> this.setState({changePasswordVisible:true})}>Change Password</Menu.Item>
+                            <Menu.Item key="setting:2" onClick={()=> this.props.logout()}>Logout</Menu.Item>
+                        </SubMenu>
+                        :
+                        <Menu.Item key="login" style={{float:"right"}} icon={<LoginOutlined style={iconFontSize}/>}>
+                            <Link to={"/login"} style={textFontSize}>Login</Link>
+                        </Menu.Item>
+                    }
                     
-                    <Menu.Item key="about" style={{float:"right"}}>
-                        <InfoCircleOutlined />
-                        <Link to={"/about"}>About</Link>
-                    </Menu.Item>
+                    {
+                        window.location.href.includes("home") && this.props.isAuthenticated?
+                        <Menu.Item key="forms" style={{float:"right"}} icon={<FormOutlined style={iconFontSize}/>}>
+                            <Link to={"/forms"} style={textFontSize}>Forms</Link>
+                        </Menu.Item>
+                        :
+                        <Menu.Item key="home" style={{float:"right"}} icon={<HomeOutlined style={iconFontSize}/>}>
+                            <Link to={"/home"} style={textFontSize}>Home</Link>
+                        </Menu.Item>
+                    }
                 </Menu>
                 {this.props.children}
             </div>
@@ -158,6 +173,7 @@ class NavBar extends React.Component {
 
 const mapStateToProps = state => {
     return {
+        isAuthenticated: state.auth.username !== undefined && state.auth.username !== null,
         username: state.auth.username,
         isEnlarge: state.enlarge,
     }

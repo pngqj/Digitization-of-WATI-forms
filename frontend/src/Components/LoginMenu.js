@@ -247,7 +247,7 @@ class LoginMenu extends React.Component {
 
     render (){
         return (
-            <div style={{background:"#505050", height:"100%", width:"100%", position: "fixed", left: 0, top: 0}}>
+            <div style={{background:"#505050", marginTop:this.props.navBarHeight, height:"100%", width:"100%", position: "fixed", left: 0, top: 0}}>
                 {this.agreementModel(this.state.agreementModelVisible)}
                 {this.resendEmailModel(this.state.resendEmailModelVisible)}
                 <h2 style={{marginTop:"5%", color:"#ffffff", textAlign:"center"}}>W.A.T.I. Assessment Forms</h2>

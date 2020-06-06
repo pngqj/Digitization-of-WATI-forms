@@ -6,10 +6,12 @@ import * as enlargeActions from './store/actions/enlarge';
 import * as constants from './Constants'
 import LoginMenu from './Components/LoginMenu';
 import NavBar from './Components/NavBar';
-import About from './Components/About';
+import Home from './Components/Home';
 import { message } from 'antd';
 import TabManager from "./formLayout/TabManager";
 import StudentManagementPage from './Components/StudentManagementPage';
+
+const navBarHeight = "50px"
 
 class CustomLayout extends React.Component {
 
@@ -25,19 +27,21 @@ class CustomLayout extends React.Component {
     selectChildren = () =>{
         const pathname = window.location.pathname
         let children = null
+        const unauthenticated_paths = ['/home', '/login']
 
-        if (!this.props.isAuthenticated && pathname !== "/login"){
-            this.props.history.push('/login')
+        if (!this.props.isAuthenticated && !unauthenticated_paths.includes(pathname)){
+            this.props.history.push('/home')
+            // children = 
         } else if(pathname.includes("forms") && pathname.length >6 ){
             children = ( <TabManager {...this.props}/>)
         } else if(pathname.includes("forms")){
             children = (<StudentManagementPage {...this.props}/>)
             window.onbeforeunload = undefined
-        } else if(pathname === "/about"){
-            children = (<About {...this.props}/>)
+        } else if(pathname === "/home"){
+            children = (<Home {...this.props}/>)
             window.onbeforeunload = undefined
         } else if(pathname === "/login"){
-            children = (<LoginMenu {...this.props}/>)
+            children = (<LoginMenu {...this.props} navBarHeight={navBarHeight}/>)
             window.onbeforeunload = undefined
         }
 
@@ -73,8 +77,8 @@ class CustomLayout extends React.Component {
         // if user login or logout, change path
         if(nextProps.isAuthenticated !== this.props.isAuthenticated){
             if(nextProps.isAuthenticated){
-                if(!window.location.pathname.includes("/forms/")){
-                    this.props.history.push('/forms')
+                if(!window.location.pathname.includes("/forms/") && !window.location.pathname.includes("/home/")){
+                    this.props.history.push('/home')
                 } 
             } 
             else {
@@ -86,9 +90,8 @@ class CustomLayout extends React.Component {
   
   
     render() {
-        console.log(this.state.children)
         return (
-            <NavBar>
+            <NavBar navBarHeight={navBarHeight}>
                 <div style={{margin:"5%"}}>
                     {this.state.children}
                 </div>
