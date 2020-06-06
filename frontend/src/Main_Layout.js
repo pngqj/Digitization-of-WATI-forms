@@ -78,7 +78,7 @@ class CustomLayout extends React.Component {
         if(nextProps.isAuthenticated !== this.props.isAuthenticated){
             if(nextProps.isAuthenticated){
                 if(!window.location.pathname.includes("/forms/") && !window.location.pathname.includes("/home/")){
-                    this.props.history.push('/home')
+                    this.props.history.push('/forms')
                 } 
             } 
             else {
