@@ -173,7 +173,7 @@ class NavBar extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        isAuthenticated: state.auth.username !== undefined && state.auth.username !== null,
+        isAuthenticated: state.auth.username !== undefined,
         username: state.auth.username,
         isEnlarge: state.enlarge,
     }

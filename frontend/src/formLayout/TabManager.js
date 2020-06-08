@@ -145,7 +145,7 @@ class TabManager extends React.Component {
         for(let k in this.state.selectedForms){
             activeKey = `newTab${++this.newTabIndex}`;
             let form_name = this.state.selectedForms[k]
-            let newFormData = FormHandler.form_names[form_name].formData
+            let newFormData = JSON.parse(JSON.stringify(FormHandler.form_names[form_name].formData))
             this.autoPopulate(form_name, newFormData)
             let l = {formData:newFormData, title:form_name, form_name:form_name}
             formData = formData === null? {} : formData

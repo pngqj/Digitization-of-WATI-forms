@@ -20,19 +20,25 @@ class CustomLayout extends React.Component {
 
         this.state = { 
             fontSizeMenu: constants.fontSizeMenu,
-            children:null
+            children:null, 
+            margin: ""
         };
     }
 
     selectChildren = () =>{
         const pathname = window.location.pathname
         let children = null
+        let margin = "5%"
         const unauthenticated_paths = ['/home', '/login']
 
         if (!this.props.isAuthenticated && !unauthenticated_paths.includes(pathname)){
             this.props.history.push('/home')
-            // children = 
-        } else if(pathname.includes("forms") && pathname.length >6 ){
+        } else if (this.props.isAuthenticated && pathname === "/"){
+            this.props.history.push('/home')
+        }
+        
+        
+        if(pathname.includes("forms") && pathname.length >6 ){
             children = ( <TabManager {...this.props}/>)
         } else if(pathname.includes("forms")){
             children = (<StudentManagementPage {...this.props}/>)
@@ -40,12 +46,13 @@ class CustomLayout extends React.Component {
         } else if(pathname === "/home"){
             children = (<Home {...this.props}/>)
             window.onbeforeunload = undefined
+            margin = "0%"
         } else if(pathname === "/login"){
             children = (<LoginMenu {...this.props} navBarHeight={navBarHeight}/>)
             window.onbeforeunload = undefined
         }
 
-        this.setState({children})
+        this.setState({children, margin})
     }
 
     componentDidMount(){
@@ -92,7 +99,7 @@ class CustomLayout extends React.Component {
     render() {
         return (
             <NavBar navBarHeight={navBarHeight}>
-                <div style={{margin:"5%"}}>
+                <div style={{margin:this.state.margin}}>
                     {this.state.children}
                 </div>
             </NavBar>
@@ -102,7 +109,7 @@ class CustomLayout extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        isAuthenticated: state.auth.username !== undefined && state.auth.username !== null,
+        isAuthenticated: state.auth.username !== undefined,
         isEnlarge: state.enlarge,
     }
   }

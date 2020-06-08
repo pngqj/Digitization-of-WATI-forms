@@ -100,9 +100,7 @@ class StudentManagement extends React.Component {
           
           return (this.state.dataSource.length >= 1 ? (
             <ButtonGroup>
-              <Button type="primary">
-              <Link to={link}>View Forms</Link>
-              </Button>
+              <Button type="primary" onClick={()=>this.props.history.push(link)}>View Forms</Button>
               {
                 record.owner_username === this.props.username?
                 <>
@@ -125,11 +123,15 @@ class StudentManagement extends React.Component {
     ];
     this.state = {
       studentModalVisible:false,
+      dataSource: null
     };
     this.props.getStudentList()
   }
 
   componentWillReceiveProps(nextProps){
+    if(nextProps.isAuthenticated && this.state.dataSource === null){
+      this.props.getStudentList()
+    }
     let studentList = nextProps.studentList
     studentList = studentList.map((item, index) => {
       item.key = index
@@ -141,6 +143,7 @@ class StudentManagement extends React.Component {
     } )
     
     this.setState({dataSource:studentList})
+
   }
 
   showModal = (record, is_edit) =>{
@@ -242,6 +245,7 @@ const mapStateToProps = state => {
     isEnlarge: state.enlarge,
     studentList: state.formdata.studentList,
     username: state.auth.username,
+    isAuthenticated: state.auth.username !== undefined,
   }
 }
 

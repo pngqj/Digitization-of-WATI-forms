@@ -5,7 +5,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
 mongoose.Promise = global.Promise;
-const is_dev = true
+const is_dev = false
 if (is_dev) {
   mongoose.connect("mongodb://localhost:27017/test", {
     useNewUrlParser: true
