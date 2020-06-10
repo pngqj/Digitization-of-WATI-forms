@@ -121,7 +121,7 @@ class NavBar extends React.Component {
                         }}
                     onCancel={() => this.setState({changePasswordVisible:false})}
                 />
-                 <Menu style={{height:this.props.navBarHeight}} onClick={this.handleClick} selectedKeys={[this.state.current]} mode="horizontal" theme="dark">
+                 <Menu style={{height:this.props.navBarHeight, width:"100%",top:0, position:"fixed", zIndex:1}} onClick={this.handleClick} selectedKeys={[this.state.current]} mode="horizontal" theme="dark">
                     
                     {
                         window.location.href.includes("forms/")?

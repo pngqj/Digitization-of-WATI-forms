@@ -11,13 +11,8 @@ const cookieExtractor = req => {
   let token = null;
   if (req && req.cookies) {
     token = req.cookies['access_token'];
-    // console.log("token")
-    // console.log(token)
-    console.log("wasd")
-    console.log(req.cookies)
-    // token = token === undefined? req.value.body.token : token
     token = token === "undefined"? req.value.body.token : token
-    // token = token.replace("access_token=", "")
+    token = token.replace("access_token=", "")
   }
   return token;
 }

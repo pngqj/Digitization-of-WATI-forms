@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, withRouter} from 'react-router-dom';
+import { withRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as authActions from './store/actions/auth';
 import * as enlargeActions from './store/actions/enlarge';
@@ -44,7 +44,7 @@ class CustomLayout extends React.Component {
             children = (<StudentManagementPage {...this.props}/>)
             window.onbeforeunload = undefined
         } else if(pathname === "/home"){
-            children = (<Home {...this.props}/>)
+            children = (<Home {...this.props} navBarHeight={navBarHeight}/>)
             window.onbeforeunload = undefined
             margin = "0%"
         } else if(pathname === "/login"){
@@ -59,11 +59,12 @@ class CustomLayout extends React.Component {
         this.props.getEnlarge()
         this.selectChildren()
     }
+
     componentDidUpdate(prevProps) {
         if (this.props.location !== prevProps.location) {
             this.selectChildren()
         }
-      }
+    }
 
     componentWillReceiveProps(nextProps){
         if(nextProps.isEnlarge !== null){
@@ -89,7 +90,9 @@ class CustomLayout extends React.Component {
                 } 
             } 
             else {
-                this.props.history.push('/login')
+                if(!window.location.pathname.includes("/login") && !window.location.pathname.includes("/home")){
+                    this.props.history.push('/home')
+                } 
             }
         }
     }
@@ -99,7 +102,7 @@ class CustomLayout extends React.Component {
     render() {
         return (
             <NavBar navBarHeight={navBarHeight}>
-                <div style={{margin:this.state.margin}}>
+                <div style={{margin:this.state.margin, zIndex:-1}}>
                     {this.state.children}
                 </div>
             </NavBar>
