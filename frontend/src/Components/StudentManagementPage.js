@@ -129,9 +129,6 @@ class StudentManagement extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
-    if(nextProps.isAuthenticated && this.state.dataSource === null){
-      this.props.getStudentList()
-    }
     let studentList = nextProps.studentList
     studentList = studentList.map((item, index) => {
       item.key = index
@@ -245,7 +242,7 @@ const mapStateToProps = state => {
     isEnlarge: state.enlarge,
     studentList: state.formdata.studentList,
     username: state.auth.username,
-    isAuthenticated: state.auth.username !== undefined,
+    isAuthenticated: state.auth.username !== undefined && state.auth.username !== null,
   }
 }
 

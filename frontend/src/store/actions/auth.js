@@ -27,6 +27,9 @@ export const authSuccess = () => {
 }
 
 export const authFail = error => {
+    localStorage.removeItem('remember');
+    localStorage.removeItem(constants.username_secret);
+    localStorage.removeItem(constants.password_secret);
     return {
         type: actionConst.AUTH_FAIL,
         error: error,
@@ -187,6 +190,7 @@ export const refreshToken = (refresh_time, username, password, displayMsg) => {
                 // dispatch(logout());
                 console.log(err)
                 message.error("Login Error!")
+                dispatch(authFail(err));
             })
         }, refresh_time)
     }

@@ -11,7 +11,7 @@ import { message } from 'antd';
 import TabManager from "./formLayout/TabManager";
 import StudentManagementPage from './Components/StudentManagementPage';
 
-const navBarHeight = "50px"
+const navBarHeight = "8%"
 
 class CustomLayout extends React.Component {
 
@@ -85,7 +85,7 @@ class CustomLayout extends React.Component {
         // if user login or logout, change path
         if(nextProps.isAuthenticated !== this.props.isAuthenticated){
             if(nextProps.isAuthenticated){
-                if(!window.location.pathname.includes("/forms/") && !window.location.pathname.includes("/home/")){
+                if(!window.location.pathname.includes("/forms") && !window.location.pathname.includes("/home")){
                     this.props.history.push('/forms')
                 } 
             } 
@@ -112,7 +112,7 @@ class CustomLayout extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        isAuthenticated: state.auth.username !== undefined,
+        isAuthenticated: state.auth.username !== undefined && state.auth.username !== null,
         isEnlarge: state.enlarge,
     }
   }
