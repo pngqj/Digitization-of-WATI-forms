@@ -1,6 +1,6 @@
-import * as enlargeActions from '../store/actions/enlarge';
-import * as formdataActions from '../store/actions/formdata';
-import * as EncryptString from '../EncryptString';
+import * as enlargeActions from '../../store/actions/enlarge';
+import * as formdataActions from '../../store/actions/formdata';
+import * as EncryptString from '../../EncryptString';
 
 import { connect } from 'react-redux';
 import { Link} from 'react-router-dom';

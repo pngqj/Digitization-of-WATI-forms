@@ -4,14 +4,10 @@ import { connect } from 'react-redux';
 import * as authActions from './store/actions/auth';
 import * as enlargeActions from './store/actions/enlarge';
 import * as constants from './Constants'
-import LoginMenu from './Components/LoginMenu';
-import NavBar from './Components/NavBar';
-import Home from './Components/Home';
+import { BrowserView, MobileView } from "react-device-detect";
+import DesktopLayout from './Desktop/DesktopLayout'
+import MobileLayout from './Mobile/MobileLayout';
 import { message } from 'antd';
-import TabManager from "./formLayout/TabManager";
-import StudentManagementPage from './Components/StudentManagementPage';
-
-const navBarHeight = "8%"
 
 class CustomLayout extends React.Component {
 
@@ -25,56 +21,28 @@ class CustomLayout extends React.Component {
         };
     }
 
-    selectChildren = () =>{
+    redirectLink = () =>{
         const pathname = window.location.pathname
-        let children = null
-        let margin = "5%"
-        const unauthenticated_paths = ['/home', '/login']
+        const unauthenticated_paths = ['/home', '/account/login']
 
-        if (!this.props.isAuthenticated && !unauthenticated_paths.includes(pathname)){
+        if (this.props.username === null && !unauthenticated_paths.includes(pathname)){
             this.props.history.push('/home')
         } else if (this.props.isAuthenticated && pathname === "/"){
             this.props.history.push('/home')
         }
-        
-        
-        if(pathname.includes("forms") && pathname.length >6 ){
-            children = ( <TabManager {...this.props}/>)
-        } else if(pathname.includes("forms")){
-            children = (<StudentManagementPage {...this.props}/>)
-            window.onbeforeunload = undefined
-        } else if(pathname === "/home"){
-            children = (<Home {...this.props} navBarHeight={navBarHeight}/>)
-            window.onbeforeunload = undefined
-            margin = "0%"
-        } else if(pathname === "/login"){
-            children = (<LoginMenu {...this.props} navBarHeight={navBarHeight}/>)
-            window.onbeforeunload = undefined
-        }
-
-        this.setState({children, margin})
     }
 
     componentDidMount(){
-        this.props.getEnlarge()
-        this.selectChildren()
+        this.redirectLink()
     }
 
     componentDidUpdate(prevProps) {
         if (this.props.location !== prevProps.location) {
-            this.selectChildren()
+            this.redirectLink()
         }
     }
 
     componentWillReceiveProps(nextProps){
-        if(nextProps.isEnlarge !== null){
-            if(nextProps.isEnlarge.enlarge){
-                this.setState({fontSizeMenu:constants.fontSizeMenu})
-            } else{
-                this.setState({fontSizeMenu:constants.fontSizeMenuLarge})
-            }
-        }
-
         // if user confirm email
         // http://localhost:3000/confirmation/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJXQVRJX0ZPUk0iLCJzdWIiOiI1ZWE5MmE2YWQwZWQ5NzIyZGM2NDUyN2MiLCJpYXQiOjE1ODgxNDQ3NDcsImV4cCI6MTU4ODE0ODM0N30.AxwE7ijmUsQ7Pn_DclzCiNmPG0tQjQTulvpthh9Jdpc
         if (window.location.pathname.includes("/confirmation/")){
@@ -90,7 +58,7 @@ class CustomLayout extends React.Component {
                 } 
             } 
             else {
-                if(!window.location.pathname.includes("/login") && !window.location.pathname.includes("/home")){
+                if(!window.location.pathname.includes("/account/login") && !window.location.pathname.includes("/home")){
                     this.props.history.push('/home')
                 } 
             }
@@ -101,11 +69,14 @@ class CustomLayout extends React.Component {
   
     render() {
         return (
-            <NavBar navBarHeight={navBarHeight}>
-                <div style={{margin:this.state.margin, zIndex:-1}}>
-                    {this.state.children}
-                </div>
-            </NavBar>
+            <>
+                <BrowserView>
+                    <DesktopLayout {...this.props}/>
+                </BrowserView>
+                <MobileView>
+                    <MobileLayout {...this.props}/>
+                </MobileView>
+            </>
         );
     }
 }

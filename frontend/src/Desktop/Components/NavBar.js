@@ -1,6 +1,6 @@
 import React from 'react';
-import * as authActions from '../store/actions/auth';
-import * as enlargeActions from '../store/actions/enlarge';
+import * as authActions from '../../store/actions/auth';
+import * as enlargeActions from '../../store/actions/enlarge';
 import { Link, withRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Menu, Modal, Input, Form, message } from 'antd';
@@ -150,7 +150,7 @@ class NavBar extends React.Component {
                         </SubMenu>
                         :
                         <Menu.Item key="login" style={{float:"right"}} icon={<LoginOutlined style={iconFontSize}/>}>
-                            <Link to={"/login"} style={textFontSize}>Login</Link>
+                            <Link to={"/account/login"} style={textFontSize}>Login</Link>
                         </Menu.Item>
                     }
                     

@@ -2,7 +2,7 @@ import { Form, Input, Button, Checkbox, message, Modal } from 'antd';
 import React from 'react';
 import { connect } from 'react-redux';
 import { NavLink, withRouter } from 'react-router-dom';
-import * as actions from '../store/actions/auth';
+import * as actions from '../../store/actions/auth';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 
 const tailLayout = {
@@ -198,7 +198,7 @@ class LoginMenu extends React.Component {
                 </a>
 
                 <Form.Item>
-                    <Button type="primary" htmlType="submit" className="login-form-button" style={{width:"100%"}}>
+                    <Button type="primary" htmlType="submit" className="login-form-button" style={{width:"100%", marginTop:20}}>
                     Log in
                     </Button>
                 </Form.Item>
@@ -250,8 +250,7 @@ class LoginMenu extends React.Component {
             <div style={{background:"#505050", height:"100%", width:"100%", position: "fixed", left: 0, top: 0}}>
                 {this.agreementModel(this.state.agreementModelVisible)}
                 {this.resendEmailModel(this.state.resendEmailModelVisible)}
-                <h2 style={{marginTop:"5%", color:"#ffffff", textAlign:"center"}}>W.A.T.I. Assessment Forms</h2>
-                <div style={{background:"#ffffff", height:this.state.isSignUp? "75%":"45%", width:"33%", position: "fixed", left: "33%", top: "20%"}}>
+                <div style={{background:"#ffffff", height:this.state.isSignUp? "75%":"35%", width:"80%", position: "fixed", left: "10%", top: this.state.isSignUp? "10%" : "20%"}}>
                     {
                         this.state.isSignUp? this.signUpForm : this.loginForm
                     }

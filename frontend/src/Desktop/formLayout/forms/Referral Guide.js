@@ -1,5 +1,5 @@
 import moment from 'moment';
-import * as constants from '../../Constants'
+import * as constants from '../../../Constants'
 import * as section1 from './Referral Guide subforms/section1'
 import * as section2 from './Referral Guide subforms/section2'
 import * as section3 from './Referral Guide subforms/section3'

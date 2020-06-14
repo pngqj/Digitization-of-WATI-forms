@@ -1,14 +1,14 @@
 import React from 'react';
 import { Modal, message, Icon, Card, Button } from 'antd';
-import * as enlargeActions from '../store/actions/enlarge';
+import * as enlargeActions from '../../store/actions/enlarge';
 import { connect } from 'react-redux';
 import { render } from "react-dom";
 import ReactToPrint from "react-to-print";
-import * as Constants from '../Constants'
+import * as Constants from '../../Constants'
 import * as formHandler from './forms/FormHandler'
 import FormProperties from './FormProperties';
 import moment from 'moment';
-import * as EncryptString from '../EncryptString'
+import * as EncryptString from '../../EncryptString'
 
 
 class CustomForm extends React.Component {    

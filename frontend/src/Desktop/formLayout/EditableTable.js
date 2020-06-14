@@ -1,6 +1,6 @@
 import { Checkbox, Table, Input, InputNumber, Popconfirm, Form, message, Modal, DatePicker, Button, Popover } from 'antd';
 import React from 'react';
-import * as Constants from '../Constants'
+import * as Constants from '../../Constants'
 import moment from 'moment';
 
 const EditableContext = React.createContext();

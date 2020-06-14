@@ -2,8 +2,8 @@ import { Select, Modal, message, Button } from 'antd';
 import React from 'react';
 import { withRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
-import * as EncryptString from '../EncryptString'
-import * as actions from '../store/actions/formdata';
+import * as EncryptString from '../../EncryptString'
+import * as actions from '../../store/actions/formdata';
 
 const { Option } = Select;
 

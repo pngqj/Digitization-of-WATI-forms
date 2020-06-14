@@ -1,8 +1,8 @@
 import axios from 'axios';
 import * as actionConst from './actionConst';
-import { message} from 'antd';
 import * as constants from '../../Constants'
 import * as EncryptString from '../../EncryptString'
+import { message } from 'antd';
 
 axios.defaults.withCredentials = true;
 

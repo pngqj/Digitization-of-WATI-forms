@@ -1,5 +1,5 @@
 import EditableTable from "./EditableTable"
-import * as Constants from '../Constants'
+import * as Constants from '../../Constants'
 import React from 'react';
 import {Select, Input, Checkbox, DatePicker, List, Row, Col, Divider, Descriptions, Switch, Icon, Card, message, InputNumber } from 'antd';
 import moment from 'moment';

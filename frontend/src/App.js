@@ -3,19 +3,21 @@ import { BrowserRouter, Route} from "react-router-dom";
 import { connect } from 'react-redux';
 import 'antd/dist/antd.css';
 import * as actions from './store/actions/auth';
-import Layout from './Main_Layout'
+import * as enlargeActions from './store/actions/enlarge';
+import MainLayout from './MainLayout';
 
 class App extends Component {
 
     componentDidMount() {
         // document.body.style.zoom = 1.25 //set default zoom 1.25x, make everything bigger
         this.props.onTryAutoSignup();
+        this.props.getEnlarge()
     }
 
     render() {
         return ( 
         <BrowserRouter>
-            <Layout {...this.props}/>
+            <MainLayout  {...this.props}/>
         </BrowserRouter>
             );
         }
@@ -28,6 +30,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
+        getEnlarge: () => dispatch(enlargeActions.getEnlarge()),
         onTryAutoSignup: () => dispatch(actions.authCheckState())
     }
 }

@@ -1,6 +1,6 @@
 import React from 'react';
-import Banner from '../Images/banner_small.png';
-import ScrollGif from '../Images/scroll_down.gif';
+import Banner from '../../Images/banner_small.png';
+import ScrollGif from '../../Images/scroll_down.gif';
 import { message, Menu,} from 'antd';
 const { SubMenu } = Menu;
 class Home extends React.Component {
@@ -25,8 +25,9 @@ class Home extends React.Component {
         immediate = immediate === true
         let scrollTop = window.scrollY
         scrollTop = scrollTop === undefined? document.documentElement.scrollTop : scrollTop //IE8 support
-        const showIndex = Math.floor(scrollTop/100)
-        const id_list = ["banner", "text1", "text2", "text3"]
+        const id_list = ["text1", "text2", "text3"]
+        let showIndex = Math.floor(scrollTop/100)
+        showIndex = showIndex >= id_list.length? (id_list.length - 1):showIndex
 
         if(this.state.limitScroll){
             let scrollLimitLower = this.state.showIndex * 100
@@ -97,7 +98,7 @@ class Home extends React.Component {
         return (
             <div>
                 <Menu
-                    style={{width:"15%", height:"100%", top:0, paddingTop:this.props.navBarHeight, position:"fixed", fontWeight:"bolder", fontSize:"20px"}}
+                    style={{width:"15%", height:"100%", top:0, paddingTop:this.props.navBarHeight, position:"fixed", fontWeight:"bolder", fontSize:"15px"}}
                     selectedKeys={[(this.state.showIndex + 0).toString()]}
                     defaultOpenKeys={['sub1']}
                     mode="inline"
@@ -106,26 +107,19 @@ class Home extends React.Component {
                     onClick={(item, key, keyPath, domEvent)=>{this.scrollToSelected(parseInt(item.key))}}
                     >
                     <Menu.Item key="0" >
-                        Banner
+                        Introduction to WATI
                     </Menu.Item>
                     <Menu.Item key="1" >
-                        Introduction
-                    </Menu.Item>
-                    <Menu.Item key="2" >
                         WATI Forms
                     </Menu.Item>
-                    <Menu.Item key="3" >
+                    <Menu.Item key="2" >
                         Instructions
                     </Menu.Item>
                 </Menu>
 
                 <img onClick={()=>this.scrollToSelected(this.state.showIndex + 1)} id="scroll" style={{display:scrollDisplay, width:"10%", height:"15%", right:"40%", left:"50%",bottom:"-2.5%", position:"fixed"}} src={ScrollGif}/>
 
-                <div style={{minHeight:(window.innerHeight + 400).toString() + "px"}}>
-
-                    <div id="banner" style={{width:right, opacity:0, right:"5%", bottom:"5%", position:"fixed", display: "flex", justifyContent: "center", alignItems: "center", overflow: "hidden"}}>
-                        <img style={{flexShrink: 0, width: "100%", height: "100%"}} src={Banner} alt="Picture of an inclusive classroom. A girl in a wheelchair is seated around a table with three other children, working on a task together using laptops. Four circles around the classroom scene depict different assistive technology devices – a visual schedule, tablet, refreshable Braille display, and wheelchair."/>
-                    </div>
+                <div style={{minHeight:(window.innerHeight + 300).toString() + "px"}}>
 
                     <div id="text1" style={{opacity:0,position:"fixed", padding:"5%", left:left, fontSize:"20px"}}>
                         <h1>Introduction to WATI</h1>

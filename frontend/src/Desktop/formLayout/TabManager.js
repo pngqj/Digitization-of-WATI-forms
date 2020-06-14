@@ -1,11 +1,11 @@
 import React from 'react';
 import { Tabs, Modal, notification, Checkbox, Button, Input, message, Popover, Tooltip } from 'antd';
-import * as enlargeActions from '../store/actions/enlarge';
-import * as actions from '../store/actions/formdata';
+import * as enlargeActions from '../../store/actions/enlarge';
+import * as actions from '../../store/actions/formdata';
 import { connect } from 'react-redux';
 import { Prompt } from 'react-router'
-import * as Constants from '../Constants'
-import * as EncryptString from '../EncryptString'
+import * as Constants from '../../Constants'
+import * as EncryptString from '../../EncryptString'
 import * as FormHandler from './forms/FormHandler'
 import {
   PlusOutlined,
