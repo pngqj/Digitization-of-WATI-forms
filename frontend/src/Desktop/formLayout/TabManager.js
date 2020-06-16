@@ -26,7 +26,6 @@ class TabManager extends React.Component {
         let record = window.location.pathname.replace("/forms/", "")
         record = EncryptString.decrypt(record)
         record = JSON.parse(record)
-        console.log(record)
         this.student_name = record.student_name
         this.student_school = record.student_school
         this.student_age = record.student_age
@@ -48,7 +47,6 @@ class TabManager extends React.Component {
         }
 
         this.newTabIndex = nextprops.newTabIndex 
-        console.log(nextprops)
 
         let panes = this.getPanes(nextprops.formdata)
         let addTabModalVisible = panes.length == 0
@@ -141,7 +139,6 @@ class TabManager extends React.Component {
       addFormsToTab = () =>{
         let activeKey = `newTab${this.newTabIndex}`;
         let formData = this.state.formData
-        console.log(formData)
         for(let k in this.state.selectedForms){
             activeKey = `newTab${++this.newTabIndex}`;
             let form_name = this.state.selectedForms[k]

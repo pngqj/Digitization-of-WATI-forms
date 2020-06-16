@@ -25,6 +25,9 @@ class CustomLayout extends React.Component {
         const pathname = window.location.pathname
         const unauthenticated_paths = ['/home', '/account/login']
 
+        if (pathname === "/"){
+            this.props.history.push('/home')
+        }
         if (this.props.username === null && !unauthenticated_paths.includes(pathname)){
             this.props.history.push('/home')
         } else if (this.props.isAuthenticated && pathname === "/"){

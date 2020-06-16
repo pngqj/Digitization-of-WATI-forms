@@ -15,9 +15,7 @@ class CustomForm extends React.Component {
     constructor(props) {
         super(props);
         let boolean_checked = {}
-        console.log(formData)
         let formData = this.props.formData[this.props.activeKey].formData
-        console.log(formData)
         
         this.name = this.props.form_name
 
@@ -37,7 +35,6 @@ class CustomForm extends React.Component {
                 let type = properties[props].type
                 // let section = properties[props].section
                 
-        console.log(formNo)
                 const data = formData[formNo].data[formDataNo]
                 let key = formNo * 1000 + formDataNo + props
 
