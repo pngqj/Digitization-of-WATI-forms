@@ -25,7 +25,7 @@ class Home extends React.Component {
         immediate = immediate === true
         let scrollTop = window.scrollY
         scrollTop = scrollTop === undefined? document.documentElement.scrollTop : scrollTop //IE8 support
-        const id_list = ["text1", "text2", "text3"]
+        const id_list = ["banner", "text1", "text2", "text3"]
         let showIndex = Math.floor(scrollTop/100)
         showIndex = showIndex >= id_list.length? (id_list.length - 1):showIndex
 
@@ -95,32 +95,36 @@ class Home extends React.Component {
         const left = "15%"
         const right = "75%"
         const scrollDisplay = this.state.showIndex === 3 ? "none" : ""
+        const selectedKeys = this.state.showIndex  || 0 //<=1 ? 0 : this.state.showIndex - 1
         return (
             <div>
                 <Menu
                     style={{width:"15%", height:"100%", top:0, paddingTop:this.props.navBarHeight, position:"fixed", fontWeight:"bolder", fontSize:"15px"}}
-                    selectedKeys={[(this.state.showIndex + 0).toString()]}
-                    defaultOpenKeys={['sub1']}
+                    selectedKeys={[(selectedKeys).toString()]}
                     mode="inline"
                     theme="dark"
                     inlineCollapsed={this.state.collapsed}
                     onClick={(item, key, keyPath, domEvent)=>{this.scrollToSelected(parseInt(item.key))}}
                     >
-                    <Menu.Item key="0" >
+                    <Menu.Item key="1" >
                         Introduction to WATI
                     </Menu.Item>
-                    <Menu.Item key="1" >
+                    <Menu.Item key="2" >
                         WATI Forms
                     </Menu.Item>
-                    <Menu.Item key="2" >
+                    <Menu.Item key="3" >
                         Instructions
                     </Menu.Item>
                 </Menu>
 
                 <img onClick={()=>this.scrollToSelected(this.state.showIndex + 1)} id="scroll" style={{display:scrollDisplay, width:"10%", height:"15%", right:"40%", left:"50%",bottom:"-2.5%", position:"fixed"}} src={ScrollGif}/>
 
-                <div style={{minHeight:(window.innerHeight + 300).toString() + "px"}}>
+                <div style={{minHeight:(window.innerHeight + 400).toString() + "px"}}>
 
+                    <div id="banner" style={{width:right, opacity:0, right:"5%", bottom:"5%", position:"fixed", display: "flex", justifyContent: "center", alignItems: "center", overflow: "hidden"}}>
+                        <img style={{flexShrink: 0, width: "100%", height: "100%"}} src={Banner} alt="Picture of an inclusive classroom. A girl in a wheelchair is seated around a table with three other children, working on a task together using laptops. Four circles around the classroom scene depict different assistive technology devices – a visual schedule, tablet, refreshable Braille display, and wheelchair."/>
+                    </div>
+                    
                     <div id="text1" style={{opacity:0,position:"fixed", padding:"5%", left:left, fontSize:"20px"}}>
                         <h1>Introduction to WATI</h1>
                         <p>The Wisconsin Assistive Technology Initiative (WATI) Assessment Package is a systematic, stepwise framework designed to help in the assistive technology (AT) decision-making process for students with disabilities in their customary environments.</p>

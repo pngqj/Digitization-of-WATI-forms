@@ -74,7 +74,8 @@ class CustomLayout extends React.Component {
                     <DesktopLayout {...this.props}/>
                 </BrowserView>
                 <MobileView>
-                    <MobileLayout {...this.props}/>
+                    {/* <MobileLayout {...this.props}/> */}
+                    <h6>Mobile version this website is coming soon!</h6>
                 </MobileView>
             </>
         );
