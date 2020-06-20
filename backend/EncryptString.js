@@ -1,7 +1,5 @@
 const {AES, enc} = require('crypto-js');
-
-
-const SECRET = "KrI|rSl{npXvV!TT'I9Gh:]OSc!rd%>q5Ue%yZ|3tdWSq$GfEq"
+const { SECRET } = require("./constants");
 
 const decrypt = (encrypted) => {
     return AES.decrypt(encrypted, SECRET).toString((enc.Utf8));

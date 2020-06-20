@@ -3,10 +3,11 @@ const morgan = require("morgan");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const { is_dev, port_no } = require("./constants");
+
 
 mongoose.Promise = global.Promise;
-const is_dev = true
-if (is_dev) {
+if (!is_dev) {
   mongoose.connect("mongodb://localhost:27017/test", {
     useNewUrlParser: true
   });
@@ -51,7 +52,7 @@ app.get('*', (req,res) =>{
   res.sendFile(__dirname+'/build/index.html');
 });
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || port_no;
 app.listen(port);
 console.log(`Server listening at ${port}`);
 

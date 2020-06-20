@@ -2,12 +2,15 @@ const JWT = require('jsonwebtoken');
 const User = require('../models/user');
 const { JWT_SECRET } = require('../configuration');
 const nodemailer = require('nodemailer');
+const {is_dev} = require('../constants')
 var smtpTransport = require('nodemailer-smtp-transport');
+
 
 signToken = (user, email_address) => {
 
   let send_email = (err, emailToken) => {
-      const url = `http://localhost:3000/confirmation/${emailToken}`;
+      let url = is_dev? 'http://localhost:3000/' : 'https://atconsideration.rdc.nie.edu.sg/'
+      url = url + `confirmation/${emailToken}`;
       var transporter = nodemailer.createTransport({
         service: 'gmail',
         host: "smtp.gmail.com",
@@ -29,6 +32,7 @@ signToken = (user, email_address) => {
       
       transporter.sendMail(mailOptions, function(error, info){
         if (error) {
+          console.log("EMAIL ERROR")
           console.log(error);
         } else {
           console.log('Email sent: ' + info.response);
