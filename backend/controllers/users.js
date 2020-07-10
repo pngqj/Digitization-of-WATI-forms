@@ -2,7 +2,7 @@ const JWT = require('jsonwebtoken');
 const User = require('../models/user');
 const { JWT_SECRET } = require('../configuration');
 const nodemailer = require('nodemailer');
-const {is_dev} = require('../constants')
+const {is_dev, smtp_host} = require('../constants')
 var smtpTransport = require('nodemailer-smtp-transport');
 
 
@@ -11,20 +11,16 @@ signToken = (user, email_address) => {
   let send_email = (err, emailToken) => {
       let url = is_dev? 'http://localhost:3000/' : 'https://atconsideration.rdc.nie.edu.sg/'
       url = url + `confirmation/${emailToken}`;
-      var transporter = nodemailer.createTransport({
-        service: 'gmail',
-        host: "smtp.gmail.com",
-        secure: true,
-        auth: {
-          user: "niewatiform@gmail.com",
-          pass: "nie2020wati"
-        }, tls: {
-          rejectUnauthorized: true
-        }
-      });
+      var transporter =nodemailer.createTransport({
+        host: smtp_host,
+        port:25,
+        secureConnection: false,
+        tls: {
+        ciphers:'SSLv3'
+      }});
       
       var mailOptions = {
-        from: 'niewatiform@gmail.com', 
+        from: 'rdcwati@rdc.nie.edu.sg', 
         to: email_address, 
         subject: 'Account Verification Token', 
         text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \n' + url 
