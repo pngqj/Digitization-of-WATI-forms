@@ -17,14 +17,11 @@ router.route('/signin')
 router.route('/signout')
   .get(passportJWT, UsersController.signOut);
 
-router.route('/dashboard')
-  .get(passportJWT, UsersController.dashboard);
-
 router.route('/changePassword')
   .post(validateBody(schemas.changePasswordSchema), passportSignIn, UsersController.changePassword);
 
 router.route('/confirmEmail')
-  .post(validateBody(schemas.confirmEmailSchema), passportJWT, UsersController.confirmEmail);
+  .post(validateBody(schemas.confirmEmailSchema), UsersController.confirmEmail);
 
 router.route('/resendEmailVerification')
   .post(validateBody(schemas.resendEmailVerificationSchema), passportSignIn, UsersController.resendEmailVerification);

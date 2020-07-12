@@ -28,7 +28,7 @@ class CustomLayout extends React.Component {
         if (pathname === "/"){
             this.props.history.push('/home')
         }
-        if (this.props.username === null && !unauthenticated_paths.includes(pathname)){
+        if (!this.props.isAuthenticated && !this.props.initial && !unauthenticated_paths.includes(pathname)){
             this.props.history.push('/home')
         } else if (this.props.isAuthenticated && pathname === "/"){
             this.props.history.push('/home')
@@ -47,9 +47,9 @@ class CustomLayout extends React.Component {
 
     componentWillReceiveProps(nextProps){
         // if user confirm email
-        // http://localhost:3000/confirmation/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJXQVRJX0ZPUk0iLCJzdWIiOiI1ZWE5MmE2YWQwZWQ5NzIyZGM2NDUyN2MiLCJpYXQiOjE1ODgxNDQ3NDcsImV4cCI6MTU4ODE0ODM0N30.AxwE7ijmUsQ7Pn_DclzCiNmPG0tQjQTulvpthh9Jdpc
-        if (window.location.pathname.includes("/confirmation/")){
-            const token = window.location.pathname.replace("/confirmation/", "")
+        // http://localhost:3000/confirmEmail/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJXQVRJX0ZPUk0iLCJzdWIiOiI1ZWE5MmE2YWQwZWQ5NzIyZGM2NDUyN2MiLCJpYXQiOjE1ODgxNDQ3NDcsImV4cCI6MTU4ODE0ODM0N30.AxwE7ijmUsQ7Pn_DclzCiNmPG0tQjQTulvpthh9Jdpc
+        if (window.location.pathname.includes("/confirmEmail/")){
+            const token = window.location.pathname.replace("/confirmEmail/", "")
             this.props.confirmEmail(token)
         }
 
@@ -89,6 +89,7 @@ const mapStateToProps = state => {
     return {
         isAuthenticated: state.auth.username !== undefined && state.auth.username !== null,
         isEnlarge: state.enlarge,
+        initial: state.auth.initial
     }
   }
 

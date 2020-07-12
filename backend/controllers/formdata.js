@@ -123,9 +123,6 @@ module.exports = {
     const owner_username = req.user.local.username
     const oldRecord = req.value.body.oldRecord
     const {foundStudent} = await find_student_with_record(false, owner_username, oldRecord)
-    console.log(owner_username)
-    console.log(oldRecord)
-    console.log(foundStudent)
     if (!foundStudent) { 
       return res.status(403).json({ error: 'Student does not exist '});
     }

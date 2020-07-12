@@ -4,7 +4,8 @@ import { updateObject } from '../utility';
 const initialState = {
     error: null, 
     username:null,
-    verified: null
+    verified: null,
+    initial:true
 }
 
 const authStart = (state, action) => {
@@ -20,6 +21,7 @@ const authLoginSuccess = (state, action) => {
         username: action.username,
         verified: action.verified,
         error: null,
+        initial:false
     });
 }
 
@@ -33,14 +35,16 @@ const authFail = (state, action) => {
     return updateObject(state, {
         error: action.error,
         username: undefined,
-        verified: null
+        verified: null,
+        initial:false
     });
 }
 
 const authLogout = (state, action) => {
     return updateObject(state, {
         username:undefined,
-        verified: null
+        verified: null,
+        initial:false
     });
 }
 

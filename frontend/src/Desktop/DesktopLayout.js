@@ -12,7 +12,7 @@ import StudentManagementPage from './Components/StudentManagementPage';
 
 const navBarHeight = "8%"
 
-class CustomLayout extends React.Component {
+class DesktopLayout extends React.Component {
 
     constructor(props) {
         super(props);
@@ -24,16 +24,22 @@ class CustomLayout extends React.Component {
         };
     }
 
-    selectChildren = () =>{
+    selectChildren = (isAuthenticated) =>{
         const pathname = window.location.pathname
         let children = null
         let margin = "5%"
         
-        if(pathname.includes("forms") && pathname.length >6 ){
-            children = ( <TabManager {...this.props}/>)
-        } else if(pathname.includes("forms")){
-            children = (<StudentManagementPage {...this.props}/>)
-            window.onbeforeunload = undefined
+        if(pathname.includes("forms")){
+            const isform = pathname.split("/")[1] === "forms"
+            if (!isform || !isAuthenticated){
+                children = (<div></div>)
+            } else if(pathname.length >6){
+                children = ( <TabManager {...this.props}/>)
+
+            } else{
+                children = (<StudentManagementPage {...this.props}/>)
+                window.onbeforeunload = undefined
+            }
         } else if(pathname === "/home"){
             children = (<Home {...this.props} navBarHeight={navBarHeight}/>)
             window.onbeforeunload = undefined
@@ -52,7 +58,13 @@ class CustomLayout extends React.Component {
 
     componentDidUpdate(prevProps) {
         if (this.props.location !== prevProps.location) {
-            this.selectChildren()
+            this.selectChildren(this.props.isAuthenticated)
+        }
+    }
+
+    componentWillReceiveProps(nextprops){
+        if (this.props.isAuthenticated !== nextprops.isAuthenticated) {
+            this.selectChildren(nextprops.isAuthenticated)
         }
     }
   
@@ -80,4 +92,4 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CustomLayout));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(DesktopLayout));

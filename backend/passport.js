@@ -10,9 +10,14 @@ const User = require('./models/user');
 const cookieExtractor = req => {
   let token = null;
   if (req && req.cookies) {
-    token = req.cookies['access_token'];
-    token = token === "undefined"? req.value.body.token : token
-    token = token.replace("access_token=", "")
+    try{
+      token = req.cookies['access_token'];
+      token = token === "undefined"? req.value.body.token : token
+      token = token.replace("access_token=", "") //for nginx
+    } catch{
+      return undefined //no token found
+    }
+    
   }
   return token;
 }

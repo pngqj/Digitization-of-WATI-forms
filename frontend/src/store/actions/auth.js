@@ -13,6 +13,11 @@ export const authStart = () => {
 }
 
 export const authLoginSuccess = (username, verified) => {
+    if(!verified){
+        localStorage.removeItem('remember');
+        localStorage.removeItem(constants.username_secret);
+        localStorage.removeItem(constants.password_secret);
+    }
     return {
         type: actionConst.AUTH_LOGIN_SUCCESS,
         username: username,
@@ -84,7 +89,10 @@ export const confirmEmail = (token) =>{
             token: token
         })
         .then(res => {
-            message.success("Email Verified! You may now sign in.")
+            message.success("Email Verified! You may now sign in. Redirecting in 5s...", 5)
+            setTimeout(function(){
+                window.location.href = 'http://localhost:3000/account/login';
+             }, 5000);
         })
         .catch(err => {
             message.error("Invalid URL!")
@@ -95,27 +103,27 @@ export const confirmEmail = (token) =>{
 export const resetPassword = (username) =>{
     return dispatch => {
         dispatch(authStart());
-        // axios.post(constants.host_link + '/reset_password/', {
-        //     username: username,
-        //     domain:constants.host_link
-        // })
-        // .then(res => {
-        //     const error = res.data.error;
+        axios.post(constants.host_link + '/reset_password/', {
+            username: username,
+            domain:constants.host_link
+        })
+        .then(res => {
+            const error = res.data.error;
 
-        //     if(error !== undefined){
-        //         if(error === "invalid_user"){
-        //             message.error('Invalid username/email!');
-        //         } 
-        //         dispatch(authFail(error))
-        //         return
-        //     }
+            if(error !== undefined){
+                if(error === "invalid_user"){
+                    message.error('Invalid username/email!');
+                } 
+                dispatch(authFail(error))
+                return
+            }
 
-        //     message.success("Check your Email!")
-        //     dispatch(authSuccess())
-        // })
-        // .catch(err => {
-        //     dispatch(authFail(err))
-        // })
+            message.success("Check your Email!")
+            dispatch(authSuccess())
+        })
+        .catch(err => {
+            dispatch(authFail(err))
+        })
     }
 }
 
@@ -143,8 +151,7 @@ export const authSignup = (signupData) => {
             password: signupData.password,
         })
         .then(res => {
-            // message.success("Sign Up Success! Check Your email!")
-            message.success("Sign Up Success!")
+            message.success("Sign Up Success! Check Your email!")
             dispatch(authSuccess())
             console.log(res)
         })
@@ -180,10 +187,17 @@ export const refreshToken = (refresh_time, username, password, displayMsg) => {
                 username: username,
                 password: password
             }).then(res => {
-                dispatch(authLoginSuccess(username, true));
-                dispatch(refreshToken(constants.refresh_time, username, password, false)) 
-                if(displayMsg){
-                    message.success("Login Success!")
+                if(res.data.verified){
+                    dispatch(authLoginSuccess(username, true));
+                    dispatch(refreshToken(constants.refresh_time, username, password, false)) 
+                    if(displayMsg){
+                        message.success("Login Success!")
+                    }
+                } else{
+                    dispatch(authLoginSuccess(undefined, false));
+                    if(displayMsg){
+                        message.error("Email not verified!")
+                    }
                 }
             })
             .catch(err => {

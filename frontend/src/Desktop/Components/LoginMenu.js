@@ -193,9 +193,9 @@ class LoginMenu extends React.Component {
                 <Checkbox>Remember me</Checkbox>
                 </Form.Item>
 
-                <a className="login-form-forgot" style={{ color:"blue", textDecoration: "underline", textDecorationColor: "blue"}} onClick={()=> message.info("coming soon")}>
+                {/* <a className="login-form-forgot" style={{ color:"blue", textDecoration: "underline", textDecorationColor: "blue"}} onClick={()=> message.info("coming soon")}>
                 Forgot password
-                </a>
+                </a> */}
 
                 <Form.Item>
                     <Button type="primary" htmlType="submit" className="login-form-button" style={{width:"100%"}}>

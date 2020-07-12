@@ -1,32 +1,23 @@
 const JWT = require('jsonwebtoken');
 const User = require('../models/user');
 const { JWT_SECRET } = require('../configuration');
-const nodemailer = require('nodemailer');
-const {is_dev, smtp_host} = require('../constants')
-var smtpTransport = require('nodemailer-smtp-transport');
+const {is_dev, nodemailer_transporter} = require('../constants')
+const EncryptString = require('../EncryptString');
 
+signToken = (user, email_address, verifiedStr) => {
 
-signToken = (user, email_address) => {
-
-  let send_email = (err, emailToken) => {
+  let send_confirmation_email = (err) => {
       let url = is_dev? 'http://localhost:3000/' : 'https://atconsideration.rdc.nie.edu.sg/'
-      url = url + `confirmation/${emailToken}`;
-      var transporter =nodemailer.createTransport({
-        host: smtp_host,
-        port:25,
-        secureConnection: false,
-        tls: {
-        ciphers:'SSLv3'
-      }});
+      url = url + `confirmEmail/${verifiedStr}`;
       
       var mailOptions = {
         from: 'rdcwati@rdc.nie.edu.sg', 
         to: email_address, 
         subject: 'Account Verification Token', 
-        text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \n' + url 
+        html: '<div><p>Hello</p> <p>Please verify your account by clicking this <a href={' + url + '}>link</a></p></div>'
       };
       
-      transporter.sendMail(mailOptions, function(error, info){
+      nodemailer_transporter.sendMail(mailOptions, function(error, info){
         if (error) {
           console.log("EMAIL ERROR")
           console.log(error);
@@ -36,12 +27,12 @@ signToken = (user, email_address) => {
       });
   }
 
-  send_email = email_address === null? null:send_email
+  send_confirmation_email = email_address === null? null:send_confirmation_email
 
   return JWT.sign({
     iss: 'WATI_FORM',
     sub: user.id
-  }, JWT_SECRET,  { expiresIn: '1 hour' }, send_email);
+  }, JWT_SECRET,  { expiresIn: '1 hour' }, send_confirmation_email);
 }
 
 module.exports = {
@@ -73,24 +64,40 @@ module.exports = {
 
     await newUser.save();
 
+    let verifiedStr = getVerifiedStr(newUser)
+
     // Generate the token and send verification email
-    const token = signToken(newUser, email);
+    const token = signToken(newUser, email, verifiedStr);
 
     res.status(200).json({ success: true });
   },
 
   confirmEmail:async (req, res, next) => {
-    const user = req.user
-    user.local.verified = true
-    await user.save()
-    res.status(200).json({ success: true });
+    const verifiedStr = EncryptString.decrypt(req.value.body.token).split("|")
+
+    filter = {
+      "local.username": verifiedStr[0],
+      "local.email": verifiedStr[1],
+      "local.password": verifiedStr[2],
+    }
+
+    let user = await User.findOne(filter)
+    if(user){
+      user.local.verified = true
+      await user.save()
+      res.status(200).json({ success: true });
+    } else{
+      res.status(200).json({ success: false });
+    }
   },
 
   resendEmailVerification:async (req, res, next) => {
     const user = req.user
     const email = user.local.email
+    const verifiedStr = getVerifiedStr(user)
+    console.log(verifiedStr)
     // Generate the token and send verification email
-    const token = signToken(user, email);
+    const token = signToken(user, email, verifiedStr);
     res.status(200).json({ success: true });
   },
 
@@ -100,102 +107,21 @@ module.exports = {
     const verified = user.local.verified
     const username = user.local.username
     
-    // if (verified){
-      const token = signToken(user, null);
+    if (verified){
+      const token = signToken(user, null, null);
       res.cookie('access_token', token, {
         httpOnly: true
       });
-    // }
+    }
+    res.status(200).json({ verified: verified, username: username});
+
     
-    res.status(200).json({ success: true, verified: verified, username: username});
   },
 
   signOut: async (req, res, next) => {
     res.clearCookie('access_token');
     // console.log('I managed to get here!');
     res.json({ success: true });
-  },
-
-  // googleOAuth: async (req, res, next) => {
-  //   // Generate token
-  //   const token = signToken(req.user);
-  //   res.cookie('access_token', token, {
-  //     httpOnly: true
-  //   });
-  //   res.status(200).json({ success: true });
-  // },
-
-  // linkGoogle: async (req, res, next) => {
-  //   res.json({ 
-  //     success: true,
-  //     methods: req.user.methods, 
-  //     message: 'Successfully linked account with Google' 
-  //   });
-  // },
-
-  // unlinkGoogle: async (req, res, next) => {
-  //   // Delete Google sub-object
-  //   if (req.user.google) {
-  //     req.user.google = undefined
-  //   }
-  //   // Remove 'google' from methods array
-  //   const googleStrPos = req.user.methods.indexOf('google')
-  //   if (googleStrPos >= 0) {
-  //     req.user.methods.splice(googleStrPos, 1)
-  //   }
-  //   await req.user.save()
-
-  //   // Return something?
-  //   res.json({ 
-  //     success: true,
-  //     methods: req.user.methods, 
-  //     message: 'Successfully unlinked account from Google' 
-  //   });
-  // },
-
-  // facebookOAuth: async (req, res, next) => {
-  //   // Generate token
-  //   const token = signToken(req.user);
-  //   res.cookie('access_token', token, {
-  //     httpOnly: true
-  //   });
-  //   res.status(200).json({ success: true });
-  // },
-
-  // linkFacebook: async (req, res, next) => {
-  //   res.json({ 
-  //     success: true, 
-  //     methods: req.user.methods, 
-  //     message: 'Successfully linked account with Facebook' 
-  //   });
-  // },
-
-  // unlinkFacebook: async (req, res, next) => {
-  //   // Delete Facebook sub-object
-  //   if (req.user.facebook) {
-  //     req.user.facebook = undefined
-  //   }
-  //   // Remove 'facebook' from methods array
-  //   const facebookStrPos = req.user.methods.indexOf('facebook')
-  //   if (facebookStrPos >= 0) {
-  //     req.user.methods.splice(facebookStrPos, 1)
-  //   }
-  //   await req.user.save()
-
-  //   // Return something?
-  //   res.json({ 
-  //     success: true,
-  //     methods: req.user.methods, 
-  //     message: 'Successfully unlinked account from Facebook' 
-  //   });
-  // },
-
-  dashboard: async (req, res, next) => {
-    console.log('(dashboard) I managed to get here!');
-    res.json({ 
-      secret: "resource",
-      methods: req.user.methods
-    });
   },
 
   checkAuth: async (req, res, next) => {
@@ -218,4 +144,8 @@ module.exports = {
 
     res.json({ success: true});
   }
+}
+
+function getVerifiedStr(user){
+  return EncryptString.encrypt(user.local.username + "|" + user.local.email + "|" + user.local.password )
 }
