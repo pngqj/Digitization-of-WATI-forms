@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 
 
-const is_dev = true
+const is_dev = false
 
 //Gmail for develoment mode
 const nodemailer_transporter = is_dev?
