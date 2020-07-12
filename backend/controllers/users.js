@@ -14,7 +14,8 @@ signToken = (user, email_address, verifiedStr) => {
         from: 'rdcwati@rdc.nie.edu.sg', 
         to: email_address, 
         subject: 'Account Verification Token', 
-        html: '<div><p>Hello</p> <p>Please verify your account by clicking this <a href={' + url + '}>link</a></p></div>'
+        // html: '<div><p>Hello</p> <p>Please verify your account by clicking this <a href={' + url + '}>link</a></p></div>'
+        html:'<div><p>Hello,</p> <p>Please verify your account by clicking the link below</p><p>' + url + '</p></div>'
       };
       
       nodemailer_transporter.sendMail(mailOptions, function(error, info){

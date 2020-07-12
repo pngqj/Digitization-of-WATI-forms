@@ -91,7 +91,7 @@ export const confirmEmail = (token) =>{
         .then(res => {
             message.success("Email Verified! You may now sign in. Redirecting in 5s...", 5)
             setTimeout(function(){
-                window.location.href = 'http://localhost:3000/account/login';
+                window.location.href = constants.host_link + '/account/login';
              }, 5000);
         })
         .catch(err => {
