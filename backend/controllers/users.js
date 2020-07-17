@@ -1,7 +1,7 @@
 const JWT = require('jsonwebtoken');
 const User = require('../models/user');
 const { JWT_SECRET } = require('../configuration');
-const {is_dev, nodemailer_transporter} = require('../constants')
+const {is_dev, enable_email_verification, nodemailer_transporter} = require('../constants')
 const EncryptString = require('../EncryptString');
 
 signToken = (user, email_address, verifiedStr) => {
@@ -108,13 +108,23 @@ module.exports = {
     const verified = user.local.verified
     const username = user.local.username
     
-    if (verified){
+    if (enable_email_verification){
+      if (verified){
+        const token = signToken(user, null, null);
+        res.cookie('access_token', token, {
+          httpOnly: true
+        });
+      }
+      res.status(200).json({ verified: verified, username: username});
+    } else{
       const token = signToken(user, null, null);
-      res.cookie('access_token', token, {
-        httpOnly: true
-      });
+        res.cookie('access_token', token, {
+          httpOnly: true
+        });
+      res.status(200).json({ verified: true, username: username});
+
     }
-    res.status(200).json({ verified: verified, username: username});
+    
 
     
   },

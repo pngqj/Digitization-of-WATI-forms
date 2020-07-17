@@ -2,6 +2,7 @@ const nodemailer = require('nodemailer');
 
 
 const is_dev = false
+const enable_email_verification = false
 
 //Gmail for develoment mode
 const nodemailer_transporter = is_dev?
@@ -28,6 +29,7 @@ const nodemailer_transporter = is_dev?
 
 module.exports = {
     is_dev : is_dev,
+    enable_email_verification: enable_email_verification,
     SECRET: "KrI|rSl{npXvV!TT'I9Gh:]OSc!rd%>q5Ue%yZ|3tdWSq$GfEq",
     port_no: 5000,
     nodemailer_transporter: nodemailer_transporter
