@@ -142,8 +142,20 @@ export const deleteStudent = (oldRecord) => {
     }
 }
 
-export const editFormdata = (student_data, formData, activeKey, newTabIndex) => {
+export const editFormdata = (student_data, formData, activeKey, newTabIndex, fileToUploadList) => {
     return dispatch => {
+        if(fileToUploadList.length > 0){
+            for(let i in fileToUploadList){
+                var fileList = new FormData();
+                fileList.append("record", JSON.stringify(student_data));
+                fileList.append("file", fileToUploadList[i]);
+                axios.post(constants.host_link + '/file/add_file/', fileList, {
+                    headers: {
+                    'Content-Type': 'multipart/form-data'
+                    },
+                })
+            }
+        }
         axios.post(constants.host_link + '/formdata/edit_formdata/', {
             record: student_data,
             formdata: formData,

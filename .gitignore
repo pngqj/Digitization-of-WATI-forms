@@ -3,3 +3,4 @@ backend/node_modules
 email_test
 backend/package-lock.json
 frontend/package-lock.json
+backend/constants.js

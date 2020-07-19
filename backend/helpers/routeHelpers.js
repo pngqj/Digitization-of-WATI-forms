@@ -58,6 +58,16 @@ module.exports = {
     editSharedToSchema: Joi.object().keys({
       record: Joi.object().required(),
       shared_to_list: Joi.object().required(),
-    })
+    }),
+    getFileSchema: Joi.object().keys({
+      filename: Joi.string().required(),
+      record: Joi.object().required(),
+    }),
+    deleteFileSchema: Joi.object().keys({
+      filename: Joi.string().required(),
+    }),
+    addFileSchema: Joi.object().keys({
+      record: Joi.string().required(),
+    }),
   }
 }

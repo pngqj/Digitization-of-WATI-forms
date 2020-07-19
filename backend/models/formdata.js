@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
 const Schema = mongoose.Schema;
 
 // Create a schema
@@ -40,31 +39,6 @@ const formdataSchema = new Schema({
     }
   },
 });
-
-// formdataSchema.pre('save', async function (next) {
-//   try {
-//     console.log('entered');
-//     if (!this.methods.includes('local')) {
-//       next();
-//     }
-//     //the formdata schema is instantiated
-//     const formdata = this;
-//     //check if the formdata has been modified to know if the password has already been hashed
-//     if (!formdata.isModified('local.password')) {
-//       next();
-//     }
-//     // Generate a salt
-//     const salt = await bcrypt.genSalt(10);
-//     // Generate a password hash (salt + hash)
-//     const passwordHash = await bcrypt.hash(this.local.password, salt);
-//     // Re-assign hashed version over original, plain text password
-//     this.local.password = passwordHash;
-//     console.log('exited');
-//     next();
-//   } catch (error) {
-//     next(error);
-//   }
-// });
 
 // Create a model
 const FormData = mongoose.model('formdata', formdataSchema);

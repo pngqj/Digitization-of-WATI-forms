@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tabs, Modal, notification, Checkbox, Button, Input, message, Popover, Tooltip } from 'antd';
+import { Tabs, Modal, notification, Checkbox, Button, Input, message, Popover, Tooltip, Upload } from 'antd';
 import * as enlargeActions from '../../store/actions/enlarge';
 import * as actions from '../../store/actions/formdata';
 import { connect } from 'react-redux';
@@ -7,15 +7,18 @@ import { Prompt } from 'react-router'
 import * as Constants from '../../Constants'
 import * as EncryptString from '../../EncryptString'
 import * as FormHandler from './forms/FormHandler'
+import Image from './Image'
 import {
   PlusOutlined,
   EditOutlined,
   SaveOutlined,
-  ShareAltOutlined
+  ShareAltOutlined,
+  UploadOutlined
 } from '@ant-design/icons';
 import CustomForm from './CustomForm';
 import ButtonGroup from 'antd/lib/button/button-group';
 import SharedToModel from './SharedToModel';
+import Axios from 'axios';
 
 const { TabPane } = Tabs;
 
@@ -36,7 +39,9 @@ class TabManager extends React.Component {
           leavingPrompt:false,
           panes:[],
           activeKey:"newTab0",
-          selectedForms: []
+          selectedForms: [],
+          fileToUploadList: [],
+          filenamelist:[]
         }
       }
 
@@ -48,7 +53,7 @@ class TabManager extends React.Component {
 
         this.newTabIndex = nextprops.newTabIndex 
 
-        let panes = this.getPanes(nextprops.formdata)
+        let panes = this.getPanes(nextprops.formdata, this.state.fileToUploadList, nextprops.student_data)
         let addTabModalVisible = panes.length == 0
 
         this.setState({
@@ -69,24 +74,54 @@ class TabManager extends React.Component {
         }
       }
 
-      getPanes(formData){
+      getPanes(formData, fileToUploadList, student_data){
         let panes = []
+        let filenamelist = []
         if (formData !== null ){
             for(let key in formData){
+                let isImage = formData[key].isImage
                 let title = formData[key].title
-                let form_name = formData[key].form_name
+                if (!isImage){
+                  let form_name = formData[key].form_name
+                  panes.push({ title: title, content: 
+                      <CustomForm 
+                        formDataEdited={this.formDataEdited.bind(this)} 
+                        openDeleteTabNotification={this.openDeleteTabNotification.bind(this)} 
+                        addReferalGuideSectionToTab = {this.addReferalGuideSectionToTab.bind(this)}
+                        activeKey={key} 
+                        form_name={form_name}
+                        formData={formData}
+                      />, key: key });
+                  } else {
+                    let filename = formData[key].filename
+                    filenamelist.push(filename)
 
-                panes.push({ title: title, content: 
-                    <CustomForm 
-                      formDataEdited={this.formDataEdited.bind(this)} 
-                      openDeleteTabNotification={this.openDeleteTabNotification.bind(this)} 
-                      addReferalGuideSectionToTab = {this.addReferalGuideSectionToTab.bind(this)}
-                      activeKey={key} 
-                      form_name={form_name}
-                      formData={formData}
-                    />, key: key });
+                    let isUpload = false
+
+                    for(let i in fileToUploadList){
+                      if (fileToUploadList[i].name === filename){
+                        isUpload = true;
+                        break
+                      }
+                    }
+
+                    if(isUpload){
+                      //for newly uploaded picture
+                      let imgPath = formData[key].imgPath 
+                      let content = (
+                        <div>
+                          <h1>{filename}</h1>
+                          <img alt={title} src={imgPath}/>
+                        </div>
+                      )
+                      panes.push({ title: title, content: content, key: key });
+                    } else{
+                      panes.push({ title: title, content: <Image student_data={student_data} filename={filename}/>, key: key });
+                    }
+                  }
             }
         }
+        this.setState({filenamelist})
         return panes
       }
 
@@ -148,7 +183,7 @@ class TabManager extends React.Component {
             formData = formData === null? {} : formData
             formData[activeKey] = l
         }
-        let panes = this.getPanes(this.state.formData)
+        let panes = this.getPanes(this.state.formData, this.state.fileToUploadList, this.props.student_data)
         this.setState({ panes, activeKey, formData, addTabModalVisible:false, selectedForms: [], leavingPrompt:true});
       }
 
@@ -175,7 +210,7 @@ class TabManager extends React.Component {
         }
         // formData = formData === null? {} : formData
         formData[newKey] = l
-        let panes = this.getPanes(this.state.formData)
+        let panes = this.getPanes(this.state.formData, this.state.fileToUploadList, this.props.student_data)
         this.setState({ panes, formData, leavingPrompt:true}); 
         this.openAddSectionNotification(newKey)
       }
@@ -205,7 +240,12 @@ class TabManager extends React.Component {
 
       remove = removeKey => {
         let pane = this.state.panes.filter(p => p.key === removeKey)[0]
-        let isSection = pane.content.props.form_name.includes("Section")
+        let isSection;
+        try{
+          isSection = pane.content.props.form_name.includes("Section")
+        } catch{
+          isSection = false
+        }
         this.openDeleteTabNotification(removeKey, isSection) 
       }
 
@@ -236,7 +276,7 @@ class TabManager extends React.Component {
         delete formData[`newTab${removeKey}`]
 
 
-        let newPanes = this.getPanes(this.state.formData)
+        let newPanes = this.getPanes(this.state.formData, this.state.fileToUploadList, this.props.student_data)
         let addTabModalVisible = newPanes.length === 0
         if(newPanes.length === 0){
           activeKey = null
@@ -301,6 +341,7 @@ class TabManager extends React.Component {
         let tabName = this.state.panes.filter(pane => pane.key === this.state.activeKey)[0].title;
         this.setState({editTabNameModelVisible:true,tabName:tabName})
       }
+      
       
       editTabName = () =>{
         const { panes } = this.state;
@@ -375,8 +416,8 @@ class TabManager extends React.Component {
                 </Tooltip>
                 <Tooltip placement="topLeft" title="Save">
                   <Button onClick={()=>{
-                    this.props.editFormdata(this.props.student_data, this.state.formData, this.state.activeKey, this.newTabIndex)
-                    this.setState({leavingPrompt:false})
+                    this.props.editFormdata(this.props.student_data, this.state.formData, this.state.activeKey, this.newTabIndex, this.state.fileToUploadList)
+                    this.setState({leavingPrompt:false, fileToUploadList: []})
                     }} 
                     style={{marginLeft:"2px", padding:0, height:"20px", width:"20px"}}>
                   <SaveOutlined type="edit" style={{fontSize:"12px", position: "absolute", top: "10%", left:"15%"}}></SaveOutlined>
@@ -387,6 +428,36 @@ class TabManager extends React.Component {
                   <Button onClick={this.showEditTabNameModel} style={{marginLeft:"2px", padding:0, height:"20px", width:"20px"}}>
                     <EditOutlined type="edit" style={{fontSize:"12px", position: "absolute", top: "10%", left:"15%"}}></EditOutlined>
                   </Button>
+                </Tooltip>
+
+                <Tooltip placement="topLeft" title="Upload">
+                  <Button style={{marginLeft:"2px", padding:0, height:"20px", width:"20px"}}>
+                    <label for="file-input" style={{marginLeft:"2px", padding:0, height:"20px", width:"20px"}}>
+                      <UploadOutlined type="edit" style={{fontSize:"12px", position: "absolute", top: "10%", left:"15%"}}></UploadOutlined>
+                    </label>
+                  </Button>
+                  <input id="file-input" style={{display: "none"}} type="file" accept="image/*"
+                    onClick={(event)=> { event.target.value = null}}                  
+                   onChange={(event) => {
+                    let file = event.target.files[0]
+                    if(this.state.filenamelist.includes(file.name)){
+                      message.error("File with this name already exist!")
+                      return
+                    } else if (file.size > 5000000){
+                      message.error("This image is too large and cannot be uploaded. File size must be less than 5 MB")
+                      return
+                    }
+                    let activeKey = `newTab${++this.newTabIndex}`;
+                    file.key = activeKey
+                    let formData = this.state.formData
+                    let l = {isImage:true, title:file.name, filename:file.name,  imgPath: URL.createObjectURL(file)}
+                    formData = formData === null? {} : formData
+                    formData[activeKey] = l
+                    let fileToUploadList = this.state.fileToUploadList
+                    fileToUploadList.push(file)
+                    let panes = this.getPanes(this.state.formData, fileToUploadList, this.props.student_data)
+                    this.setState({ panes, fileToUploadList, activeKey, formData, addTabModalVisible:false, selectedForms: [], leavingPrompt:true});
+                  }}/>
                 </Tooltip>
                 
                 {
@@ -427,7 +498,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
       getFormData: (record) => dispatch(actions.getFormdata(record)),
-      editFormdata: (student_data, formData, activeKey, newTabIndex) => dispatch(actions.editFormdata(student_data, formData, activeKey, newTabIndex))
+      editFormdata: (student_data, formData, activeKey, newTabIndex, fileToUploadList) => dispatch(actions.editFormdata(student_data, formData, activeKey, newTabIndex, fileToUploadList))
   }
 }
 

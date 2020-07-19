@@ -136,8 +136,6 @@ module.exports = {
   },
 
   checkAuth: async (req, res, next) => {
-    console.log('(checkAuth) I managed to get here!');
-
     // Generate the token
     const token = signToken(req.user, null);
     res.cookie('access_token', token, {

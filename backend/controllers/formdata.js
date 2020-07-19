@@ -3,6 +3,7 @@ const moment = require('moment');
 const EncryptString = require('../EncryptString');
 const User = require('../models/user');
 const Formdata = require('../models/formdata');
+const File = require('../models/file');
 
 module.exports = {
   add_formdata: async (req, res, next) => {
@@ -38,7 +39,7 @@ module.exports = {
 
     // Check if student formdata exist in database
     let {foundStudent} = await find_student_with_record(true, username, record)
-    
+
     if (!foundStudent) { 
       return res.status(403).json({ error: 'Student does not exist '});
     }
@@ -57,11 +58,13 @@ module.exports = {
   },
 
   get_formdata: async (req, res, next) => {
-    console.log("(get) I managed to get here!")
     const username = req.user.local.username
     const record = req.value.body.record
 
     let {foundStudent} = await find_student_with_record(true, username, record)
+    let foundFileList = await File.find({username:username});
+    foundFileList = foundFileList.map(a => a.filename)
+
 
     if(foundStudent){
       foundStudent = foundStudent.toObject()
@@ -75,7 +78,6 @@ module.exports = {
         foundStudent.local.formdata = {}
       }
     }
-
     foundStudent =  foundStudent === null? {} : foundStudent.local
 
     res.json({ success: true, formdata:foundStudent });

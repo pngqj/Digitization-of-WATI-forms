@@ -3,19 +3,13 @@ const morgan = require("morgan");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const { is_dev, port_no } = require("./constants");
+const { port_no, mongo_URL } = require("./constants");
 
 
 mongoose.Promise = global.Promise;
-if (!is_dev) {
-  mongoose.connect("mongodb://localhost:27017/test", {
-    useNewUrlParser: true
-  });
-} else {
-  mongoose.connect("mongodb+srv://queuejay:NIEtempDatabase2020@nietempdatabase-fdbbl.mongodb.net/test?retryWrites=true&w=majority", {
-    useNewUrlParser: true
-  });
-}
+mongoose.connect(mongo_URL, {
+  useNewUrlParser: true
+});
 
 const app = express();
 app.use(cookieParser());
@@ -45,6 +39,9 @@ app.use(express.json());
 // Routes
 app.use("/users", require("./routes/users"));
 app.use("/formdata", require("./routes/formdata"));
+app.use("/file", require("./routes/file"));
+app.use(express.static(__dirname + '/uploaded_img'));
+
 
 // Handles any requests that don't match the ones above
 app.use(express.static(__dirname + '/build'));

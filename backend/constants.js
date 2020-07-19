@@ -1,12 +1,28 @@
 const nodemailer = require('nodemailer');
 
 
-const is_dev = false
+const is_dev = true
 const enable_email_verification = false
 
-//Gmail for develoment mode
-const nodemailer_transporter = is_dev?
-    nodemailer.createTransport({
+let mongo_URL;
+let nodemailer_transporter;
+
+if (!is_dev) {
+    // connect to nie host for production mode
+    mongo_URL = "mongodb://localhost:27017/test"
+    // NIE smtp host
+    nodemailer_transporter = nodemailer.createTransport({
+        host: "10.55.99.61",
+        port:25,
+        secureConnection: false,
+        tls: {
+        ciphers:'SSLv3'
+    }})
+} else {
+    // connect to test database for development mode. you can create your own development database at https://account.mongodb.com/account/login
+    mongo_URL = "mongodb+srv://queuejay:NIEtempDatabase2020@nietempdatabase-fdbbl.mongodb.net/test?retryWrites=true&w=majority"
+    // Gmail for develoment mode
+    nodemailer_transporter = nodemailer.createTransport({
         service: 'gmail',
         host: "smtp.gmail.com",
         secure: true,
@@ -17,18 +33,11 @@ const nodemailer_transporter = is_dev?
         rejectUnauthorized: true
         }
     })
-    :
-    nodemailer.createTransport({
-        host: "10.55.99.61",
-        port:25,
-        secureConnection: false,
-        tls: {
-        ciphers:'SSLv3'
-    }})
-
+}
 
 module.exports = {
     is_dev : is_dev,
+    mongo_URL: mongo_URL,
     enable_email_verification: enable_email_verification,
     SECRET: "KrI|rSl{npXvV!TT'I9Gh:]OSc!rd%>q5Ue%yZ|3tdWSq$GfEq",
     port_no: 5000,
