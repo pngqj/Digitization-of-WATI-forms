@@ -430,7 +430,8 @@ class TabManager extends React.Component {
                   </Button>
                 </Tooltip>
 
-                <Tooltip placement="topLeft" title="Upload">
+                {/* uncomment below for upload button */}
+                {/* <Tooltip placement="topLeft" title="Upload">
                   <Button style={{marginLeft:"2px", padding:0, height:"20px", width:"20px"}}>
                     <label for="file-input" style={{marginLeft:"2px", padding:0, height:"20px", width:"20px"}}>
                       <UploadOutlined type="edit" style={{fontSize:"12px", position: "absolute", top: "10%", left:"15%"}}></UploadOutlined>
@@ -458,7 +459,7 @@ class TabManager extends React.Component {
                     let panes = this.getPanes(this.state.formData, fileToUploadList, this.props.student_data)
                     this.setState({ panes, fileToUploadList, activeKey, formData, addTabModalVisible:false, selectedForms: [], leavingPrompt:true});
                   }}/>
-                </Tooltip>
+                </Tooltip> */}
                 
                 {
                   this.props.is_owner_of_form?

@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 
 
-const is_dev = true
+const is_dev = false
 const enable_email_verification = false
 
 let mongo_URL;
