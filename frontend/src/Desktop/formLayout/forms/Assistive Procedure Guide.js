@@ -29,6 +29,7 @@ export const schema = [
                         gathering this information should include parents, and if\
                         appropriate, the student.\
                     </p>\
+                    ', '\
                     <h6>Step 2: Schedule Meeting</h6>\
                     <p>\
                         Schedule a meeting with the team. Team includes: parents,\
@@ -36,6 +37,7 @@ export const schema = [
                         general ed. teacher, SLP, OT, PT, administrator), and any others\
                         directly involved or with required knowledge and expertise.\
                     </p>\
+                    ', '\
                     <h5>Decision Making:</h5>\
                     <h6>\
                         Step 3: Team Completes Problem Identification Portion of\
@@ -47,14 +49,16 @@ export const schema = [
                     </h6>\
                     <p style="margin-left:15px;">\
                         The team should move quickly through:\
-                        Listing the student’s abilities/difficulties related to tasks (5-10\
-                        minutes).\
-                        Listing key aspects of the environment in which the student\
+                        <ul>\
+                        <li>Listing the student’s abilities/difficulties related to tasks (5-10\
+                        minutes).</li>\
+                        <li>Listing key aspects of the environment in which the student\
                         functions and the student’s location and positioning within the\
-                        environment (5-10 minutes).\
-                        Identifying the tasks the student needs to be able to do is\
+                        environment (5-10 minutes).</li>\
+                        <li>Identifying the tasks the student needs to be able to do is\
                         important because the team cannot generate AT solutions until\
-                        the tasks are identified (5-10 minutes). \
+                        the tasks are identified (5-10 minutes).</li>\
+                        </ul>\
                     </p>\
                     <p>\
                         (Note: The emphasis in problem identification is identifying tasks\
@@ -62,6 +66,7 @@ export const schema = [
                         student’s abilities/difficulties and characteristics of the environment\
                         of the child’s performance of the tasks.)\
                     </p>\
+                    ', '\
                     <h6>Step 4: Prioritize the List of Tasks for Solution Generation</h6>\
                     <p>\
                         Identify critical task for which the team will generate potential\
@@ -69,6 +74,7 @@ export const schema = [
                         original referral question, but is necessary so that you hone in on\
                         the most critical task\
                     </p>\
+                    ', '\
                     <h6>Step 5: Solution Generation</h6>\
                     <p>Brainstorm all possible solutions.</p>\
                     <p>\
@@ -81,9 +87,10 @@ export const schema = [
                         hands,” etc. Teams may want to use specific resources to assist\
                         with solution generation. These resources include, but are not\
                         limited to: the AT Checklist, the ASNAT Manual, the Tool Box in\
-                        Computer and Web Resources for People with Disabilities, Closing\
-                        the Gap Resource Directory, and/or AT Consultant. \
+                        <i>Computer and Web Resources for People with Disabilities, Closing\
+                        the Gap Resource Directory,</i> and/or AT Consultant. \
                     </p>\
+                    ','\
                     <h6>Step 6: Solution Selection</h6>\
                     <p>\
                         Discuss the solutions listed, thinking about which are most\
@@ -92,9 +99,10 @@ export const schema = [
                         the future. At this point list names of specific devices, hardware,\
                         software, etc. If the team does not know the names of devices, etc.,\
                         use resources noted in Step 5 or schedule a consultation with a\
-                        knowledgeable resource person (that is the part of the decisionmaking that should require the most time. Plan on 20-30 minutes\
+                        knowledgeable resource person (that is the part of the decision-making that should require the most time. Plan on 20-30 minutes\
                         here).\
                     </p>\
+                    ','\
                     <h6>Step 7: Implementation Plan</h6>\
                     <p>\
                         Develop implementation plan (including trials with equipment) –\
@@ -109,6 +117,7 @@ export const schema = [
                         ensure that someone transfers the information to paper for the\
                         child’s file for future reference. \
                     </p>\
+                    ', '\
                     <h6>Trial Use: </h6>\
                     <h6>Step 8: Implement Planned Trials</h6>\
                     <h6>Step 9: Follow Up on Planned Date </h6>\
@@ -119,11 +128,18 @@ export const schema = [
                     ']
                 },
                 {
-                    title: 'Date Completed & Comments',
-                    dataIndex: 'comments',
+                    title: 'Date Completed',
+                    dataIndex: 'dateCompleted',
                     editable: true,
-                    minRows:60,
-                }
+                    minRows:10,
+                    inputType: 'date'
+                },
+              {
+                  title: 'Comments',
+                  dataIndex: 'comments',
+                  editable: true,
+                  minRows:10,
+              }
           ]
 },
 

@@ -7,7 +7,7 @@ export const schema= [
         {
             "Engages in joint attention with adult caregiver to activities (e.g. songs, stories, games and/or toys)":{type:"boolean",span:24},
             "Shows an interest in books and stories with adult":{type:"boolean",span:24},
-            "Shows and interest in looking at books independently":{type:"boolean",span:24},
+            "Shows an interest in looking at books independently":{type:"boolean",span:24},
             "Associates pictures with spoken words when being read to":{type:"boolean",span:24},
             "Realizes text conveys meaning when being read to":{type:"boolean",span:24},
             "Recognizes connection between spoken words and specific text when being read to":{type:"boolean",span:24},
@@ -41,7 +41,7 @@ export const schema= [
             "Graphics to communicate ideas":{type:"boolean",span:12},"Text rewritten at lower reading level":{type:"boolean",span:12},
             "Bold type for main ideas":{type:"boolean",span:12},"Reduced length of assignment":{type:"boolean",span:12},
             "Additional time":{type:"boolean",span:12},"Being placed where there are few distractions":{type:"boolean",span:12},
-            "Spoken text to accompany print":{type:"boolean",span:12},"Color overlay list color":{"type":"boolean string", span:12},
+            "Spoken text to accompany print":{type:"boolean",span:12},"Color overlay (List color)":{"type":"boolean string", span:12},
             "Other":{"type":"boolean string", span:24},
 
 
@@ -98,7 +98,7 @@ export const schema= [
         title:"Difficulty", 
         "properties": 
         {
-            paragraph1: {type: "paragraph", span: 24, description: "Student has difficulty in the following."},
+            paragraph1: {type: "paragraph", span: 24, description: "Student has difficulty in the following. (Check all that apply.)"},
             "Worksheets":{type:"select", span:11, options:["", "Decoding", "Comprehending", "Decoding and comprehending"]},
             "Reading Textbook":{type:"select", span:13, options:["", "Decoding", "Comprehending", "Decoding and comprehending"]},
             "Subject Area Textbooks":{type:"select", span:14, options:["", "Decoding", "Comprehending", "Decoding and comprehending"]},

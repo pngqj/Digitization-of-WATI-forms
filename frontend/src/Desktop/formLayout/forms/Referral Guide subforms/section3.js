@@ -35,18 +35,16 @@ export const schema= [
         }
     },
     {
-        title:"Aids/Assistive Technology for Composing Written Materials Utilized by Student", 
+        title:"Aids/Assistive Technology for Composing Written Materials Utilized by Student (Check all that apply.) ",
         "properties": 
         {
-            "Word cards":{type:"boolean",span:8},"Word book":{type:"boolean",span:8},"Word wall/word lists":{type:"boolean",span:8},
-            "Prewritten words on cards or labels":{type:"boolean",span:24},
-            "Dictionary":{type:"boolean",span:8},"Electronic dictionary/spell checker":{type:"boolean",span:16},
-            "Whole words using software or hardware (e.g. IntelliKeys)":{type:"boolean",span:24},
-            "Symbol-based software for writing (e.g. Writing with Symbols 2000 or Pix Writer)":{type:"boolean",span:24},
-            "Word processing with spell checker/grammar checker":{type:"boolean",span:24},
-            "Talking word processing":{type:"boolean",span:16},"Abbreviation/expansion":{type:"boolean",span:8},
-            "Word processing with writing support":{type:"boolean",span:24},
-            "Multimedia software":{type:"boolean",span:16},"Voice recognition software":{type:"boolean",span:8},
+            "Word cards":{type:"boolean",span:12},"Word book":{type:"boolean",span:12},
+            "Word wall/word lists":{type:"boolean",span:12}, "Prewritten words on cards or labels":{type:"boolean",span:12},
+            "Dictionary":{type:"boolean",span:12},"Electronic dictionary/spell checker":{type:"boolean",span:12},
+            "Whole words using software or hardware (e.g. IntelliKeys)":{type:"boolean",span:12}, "Symbol-based software for writing (e.g. Writing with Symbols 2000 or Pix Writer)":{type:"boolean",span:12},
+            "Word processing with spell checker/grammar checker":{type:"boolean",span:12}, "Talking word processing":{type:"boolean",span:12},
+            "Abbreviation/expansion":{type:"boolean",span:12}, "Word processing with writing support":{type:"boolean",span:12},
+            "Multimedia software":{type:"boolean",span:12},"Voice recognition software":{type:"boolean",span:12},
             "Other":{"type":"boolean string", span:24},
         }
     },

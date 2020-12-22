@@ -29,12 +29,15 @@ const main_schema = [
         }
     },
     {
-        title:"Disability", 
+        title:"Disability (Check all that apply.)",
         "properties": 
         {
             "Speech/Language":{type:"boolean",span:8}, "Significant Development Delay":{type:"boolean",span:8},
-            "Specific Learning Disability":{type:"boolean",span:8}, "Cognitive Disbility":{type:"boolean",span:8}, 
-            "Other Health Impairment":{type:"boolean",span:8}, "Hearing Impaierment":{type:"boolean",span:8},
+            "Specific Learning Disability":{type:"boolean",span:8}, "Cognitive Disability":{type:"boolean",span:8},
+            "Other Health Impairment":{type:"boolean",span:8}, "Hearing Impairment":{type:"boolean",span:8},
+            "Traumatic Brain Injury":{type:"boolean",span:8}, "Autism":{type:"boolean",span:8},"Vision Impairment":{type:"boolean",span:8},
+            "Emotional/Behavioral Disability":{type:"boolean",span:8},
+            "Orthopedic Impairment - Type":{type:"boolean string",span:16},
         }
     },
     {
@@ -42,8 +45,8 @@ const main_schema = [
         "properties": 
         {
             "Birth to Three":{type:"boolean",span:8}, "Early Childhood":{type:"boolean",span:8}, 
-            "Elementary":{type:"boolean",span:8}, "Middle School":{type:"boolean",span:8}, 
-            "Secondary":{type:"boolean",span:8}, 
+            "Elementary":{type:"boolean",span:8}, "Middle School":{type:"boolean",span:8},
+            "Secondary":{type:"boolean",span:16},
         }
     },
     {
@@ -52,7 +55,7 @@ const main_schema = [
         {
             "Regular Education Classroom":{type:"boolean",span:8}, "Resource Room":{type:"boolean",span:8}, 
             "Self-contained":{type:"boolean",span:8}, "Home":{type:"boolean",span:8}, 
-            "Other":{"type":"boolean string", span:24},
+            "Other":{"type":"boolean string", span:16},
         }
     },
     {
@@ -61,7 +64,7 @@ const main_schema = [
         {
             "Occupational Therapy":{type:"boolean",span:8}, "Physical Therapy":{type:"boolean",span:8}, 
             "Speech Language":{type:"boolean",span:8}, 
-            "Other":{"type":"boolean string", span:24},
+            "Other(s)":{"type":"boolean string", span:24},
         }
     },
     {
@@ -74,8 +77,13 @@ const main_schema = [
             "Has frequent ear infections":{type:"boolean",span:12}, "Has digestive problems":{type:"boolean",span:12}, 
             "Has allergies to":{"type":"boolean string", span:24},
             "Currently taking medication for":{"type":"boolean string", span:24},
-            "Other – Describe briefly":{"type":"boolean string", span:24},
-            "Other Issues of Concern":{"type":"string", span:24}
+            "Other – Describe briefly":{"type":"boolean string", span:24}
+        }
+    },
+    {
+        title: "Other Issues of Concern",
+        "properties":{
+            "":{"type":"string", span:24}
         }
     },
     {
@@ -86,10 +94,10 @@ const main_schema = [
             "Manual Communication Board":{type:"boolean",span:12},"Augmentative Communication System":{type:"boolean",span:12},
             "Low Tech Vision Aids":{type:"boolean",span:12},"Amplification System":{type:"boolean",span:12},
             "Environmental Control Unit/EADL":{type:"boolean",span:12},"Manual Wheelchair":{type:"boolean",span:12},
-            "Power Wheelchair":{type:"boolean",span:12},
+            "Power Wheelchair":{type:"boolean",span:12},"Computer – Type (platform)":{"type":"boolean string", span:12},
             "Voice Recognition":{type:"boolean",span:12},"Word Prediction":{type:"boolean",span:12},
 
-            "Computer – Type (platform)":{"type":"boolean string", span:24},
+
             "Adaptive Input - Describe":{"type":"boolean string", span:24},
             "Adaptive Output - Describe":{"type":"boolean string", span:24},
             "Other":{"type":"boolean string", span:24},
@@ -147,7 +155,7 @@ const main_schema = [
             "Section 12 Hearing":{type:"boolean section",span:12, section:12},
             "Section 6 Learning and Studying":{type:"boolean section",span:12, section:6},
             "Section 13 General":{type:"boolean section",span:12, section:13},
-            "Section 7 Math": {type:"boolean section",span:12, section:7},
+            "Section 7 Math": {type:"boolean section",span:24, section:7},
 
 
         }

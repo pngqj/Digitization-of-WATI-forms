@@ -2,7 +2,7 @@
 
 export const schema= [
     {
-        title:"Student’s Present Means of Communication", 
+        title:"Student’s Present Means of Communication (Check all that are used)",
         "properties": 
         {
             "Changes in breathing patterns":{type:"boolean",span:8},"Body position changes":{type:"boolean",span:8},"Eye-gaze/eye movement":{type:"boolean",span:8},
@@ -31,6 +31,7 @@ export const schema= [
             "Voice output AC device (name of device)":{"type":"boolean string", span:24, "integer":true},
             "Intelligible speech":{type:"boolean",span:12},"Writing":{type:"boolean",span:12},
             "Other":{"type":"boolean string", span:24},
+            "Primary method of communication student uses":{"type":"string", span:24},
         }
     },
     {
@@ -212,7 +213,7 @@ export const schema= [
             "Visually shifts vertically":{type:"boolean",span:12},"Recognizes line drawings":{type:"boolean",span:12},
             "Is a specific type (brand) of symbols or pictures preferred?":{"type":"string", span:24}, 
             "What size symbols or pictures are preferred?":{"type":"string", span:24}, 
-            "What line thickness of symbols is preferred? (inch)":{"type":"string", span:24, integer:true}, 
+            "What line thickness of symbols is preferred? (inches)":{"type":"string", span:24, integer:true},
             paragraph1: {type: "paragraph", span: 24, description: "Does student seem to do better with black on white, or white on black, or a specific color combination for figure/ground discrimination?"},
             "":{type:"string",span:24},
         }

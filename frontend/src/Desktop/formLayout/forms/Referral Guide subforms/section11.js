@@ -47,27 +47,40 @@ export const schema= [
                     "Left eye":{type:"boolean",span:24},
                 }
             },
-            "Uses screen reader:":{"type":"boolean string", span:24, multiple:['pt. type for', 'minutes without eye fatigue.'], multiLength: [0.575,0.425]},
+            // "Uses screen reader:":{"type":"boolean string", span:24, multiple:['pt. type for', 'minutes without eye fatigue.'], multiLength: [0.575,0.425]},
+            "Uses screen reader:":{"type":"boolean string", span:24},
             "Requires recorded material, text to speech, or Braille materials":{type:"boolean",span:24},
         },
     },
     {
         title:"Alternative Output ", 
-        "properties": 
-        {
-            "Slate and stylus":{type:"boolean",span:24},
-            "Talking calculator":{type:"boolean",span:24},
-            "Braille calculator":{type:"boolean",span:24},
-            "Braille notetaker":{type:"boolean",span:24},
-            "Electric Brailler":{type:"boolean",span:24},
-            "Refreshable Braille display":{type:"boolean",span:24},
-            "Tactile images":{type:"boolean",span:24},
-            "Screen reader":{type:"boolean",span:24},
-            "Braille translation software":{"type":"boolean string", span:24},
-        }
+        "properties":
+            {
+                "Slate and stylus":{type:"boolean",span:24},
+                "Talking calculator":{type:"boolean",span:24},
+                "Braille calculator":{type:"boolean",span:24},
+                "Braille notetaker":{type:"boolean",span:24},
+                "Electric Brailler":{type:"boolean",span:24},
+                "Refreshable Braille display":{type:"boolean",span:24},
+                "Tactile images":{type:"boolean",span:24},
+                "Screen reader":{type:"boolean",span:24},
+                "Braille translation software":{"type":"boolean string", span:24},
+            }
+
     },
     {
-        title:"Alternative Output ", 
+        title:"Level of Proficiency (Check the one that most closely describes the student)",
+        "properties":{
+            "Requires frequent physical prompts":{type:"boolean",span:12},
+            "Requires frequent verbal cues":{type:"boolean",span:12},
+            "Needs only intermittent cues":{type:"boolean",span:12},
+            "Uses device to complete tasks independently":{type:"boolean",span:12},
+            "Trouble-shoots problems related to device":{type:"boolean",span:24}
+        }
+
+    },
+    {
+        title:"Writing/Handwritten materials (Check all that apply).",
         "properties": 
         {
             "Writes using space correctly":{type:"boolean",span:12},"Writes on line":{type:"boolean",span:12},

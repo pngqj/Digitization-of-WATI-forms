@@ -11,16 +11,27 @@ export const schema= [
             "Left leg":{type:"boolean",span:8},"Right leg":{type:"boolean",span:8},"Mouth":{type:"boolean",span:8},
             "Left foot":{type:"boolean",span:8},"Right foot":{type:"boolean",span:8},"Tongue":{type:"boolean",span:8},
             "Finger(s) ":{type:"boolean",span:8},"Eyebrows":{type:"boolean",span:8},
-            "Other":{"type":"boolean string", span:24},
-            question1: {type: "paragraph", span: 24, description: "Describe briefly the activities/situations observed"},
+            "Other":{"type":"boolean string", span:8},
+            question1: {type: "paragraph", span: 24, description: "Describe briefly the activities/situations observed."},
             _:{type:"string",span:24, long:true},
         }
     },
+    // {
+    //     title:"Range of Motion",
+    //     "properties":
+    //         {
+    //             "Student has specific limitations to range":
+    //                 {type:"switch", "properties":
+    //                         {
+    //                             "Yes":{type:"boolean",span:12},"No":{type:"boolean",span:12}}},
+    //             "Describe the specific range in which the student has the most motor control":{"type":"string", span:24}
+    //         }
+    // },
     {
-        title:"Range of Motion", 
-        "properties": 
-        {
-            "Student has specific limitations to range":{"type":"boolean string", span:24, is_TextArea:true, paragraph:"Describe the specific range in which the student has the most motor control"},
+        title:"Range of Motion",
+        "properties":{
+            "Student has specific limitations to range":{"type":"boolean string", span:24, is_TextArea:true, paragraph:"Describe the specific range in which the student has the most motor control."},
+
         }
     },
     {
@@ -34,7 +45,7 @@ export const schema= [
         title:"Accuracy", 
         "properties": 
         {
-            "Student has difficulty with accuracy":{"type":"boolean string", span:24, is_TextArea:true, paragraph:"Describe how accurate, reliable and consistent the student is in performing a particular fine motor task"},
+            "Student has difficulty with accuracy":{"type":"boolean string", span:24, is_TextArea:true, paragraph:"Describe how accurate, reliable and consistent the student is in performing a particular fine motor task."},
         }
     },
     {
@@ -86,18 +97,18 @@ export const schema= [
         }
     },
     {
-        title:"Scanning", 
-        "properties": 
+        title:"Scanning",
+        "properties":
         {
-            "If student cannot direct select, does the student use scanning?": 
+            "If student cannot direct select, does the student use scanning?":
             {type:"switch", "properties":
                 {
                     "Step":{type:"boolean",span:12},"Automatic":{type:"boolean",span:12},"Inverse":{type:"boolean",span:12},
-                    "Other":{"type":"boolean string", span:24}, 
+                    "Other":{"type":"boolean string", span:24},
                 }
             },
-            "Preferred control site (body site)":{"type":"string", span:24}, 
-            "Other possible control sites":{"type":"string", span:24}, 
+            "Preferred control site (body site)":{"type":"string", span:24},
+            "Other possible control sites":{"type":"string", span:24},
         }
     },
     {
@@ -107,7 +118,7 @@ export const schema= [
             "Touch (jellybean)":{type:"boolean",span:6},"Light touch":{type:"boolean",span:6},"Wobble":{type:"boolean",span:6},"Rocker":{type:"boolean",span:6},
             "Joystick":{type:"boolean",span:6},"Lever":{type:"boolean",span:6},"Head switch":{type:"boolean",span:6}," Mercury (tilt)":{type:"boolean",span:6},
             "Arm slot":{type:"boolean",span:6},"Eye brow":{type:"boolean",span:6},"Tongue":{type:"boolean",span:6},"Sip/puff":{type:"boolean",span:6},
-            "Tread":{type:"boolean",span:6},"Other":{"type":"boolean string", span:24}, 
+            "Tread":{type:"boolean",span:6},"Other":{"type":"boolean string", span:18},
             question1: {type: "paragraph", span: 24, description: "Summary of Student’s Abilities and Concerns Related to Computer/Device Access"},
             _:{type:"string",span:24, long:true},
 

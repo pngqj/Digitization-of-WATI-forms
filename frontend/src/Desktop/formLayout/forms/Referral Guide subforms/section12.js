@@ -12,7 +12,7 @@ export const schema= [
         title:"Audiological Information", 
         "properties": 
         {
-            "Date of Last Vision Report":{type:"string",span:24},
+            "Date of Last Vision Report":{type:"date",span:24},
             "Right Ear Hearing loss identified":{type:"select", span:12, options:["Mild", "Moderate", "Severe", "Profound"]},
             "Left Ear Hearing loss identified":{type:"select", span:12, options:["Mild", "Moderate", "Severe", "Profound"]},
             "Onset of hearing loss":{"type":"string", span:12},
@@ -21,10 +21,14 @@ export const schema= [
     },
     {
         title:"Unaided Auditory Abilities (Check all that apply.)", 
-        "properties": 
+        "properties":
         {
+            "Discriminates environmental vs. non-environmental sounds ":{type:"boolean",span:24},
+            "Turns toward sound":{type:"boolean",span:24},
+            "Hears some speech sounds":{type:"boolean",span:24},
+            "Understands synthesized speech":{type:"boolean",span:24},
             "Attends to sounds": 
-            {type:"switch", "properties":
+            {type:"switch",span:24, "properties":
                 {
                     "High pitch":{type:"boolean",span:6},
                     "Low pitch":{type:"boolean",span:6},
@@ -33,10 +37,7 @@ export const schema= [
                 }
             },
         },
-        "Discriminates environmental vs. non-environmental sounds ":{type:"boolean",span:24},
-        "Turns toward sound":{type:"boolean",span:24},
-        "Hears some speech sounds":{type:"boolean",span:24},
-        "Understands synthesized speech":{type:"boolean",span:24},
+
     },
     {
         title:"Student’s Eye Contact and Attention to Communication", 
@@ -91,7 +92,7 @@ export const schema= [
         }
     },
     {
-        title:"Communication Used by Others", 
+        title:"Level of Receptive Proficiency in Each Environment",
         "properties": 
         {
             "table 1":{"type":"table", span:24, title: " ", needCheckBox:true, needAddButton:false, 
@@ -138,7 +139,7 @@ export const schema= [
         }
     },
     {
-        title:"Receptive and Expressive Abilities", 
+        title:"Is There a Discrepancy Between Receptive and Expressive Abilities?",
         "properties": 
         { 
             "Is There a Discrepancy Between Receptive and Expressive Abilities?": 
@@ -198,10 +199,10 @@ export const schema= [
         }
     },
     {
-        title:"Summary", 
+        title:"Current Reading Level",
         "properties": 
         {
-            "Current Reading Level": {type:"string", span:24},
+            "": {type:"string", span:24},
             paragraph1: {type: "paragraph", span: 24, description: "Summary of Hearing Abilities and Concern"},
             _:{type:"string",span:24, long:true},
         }

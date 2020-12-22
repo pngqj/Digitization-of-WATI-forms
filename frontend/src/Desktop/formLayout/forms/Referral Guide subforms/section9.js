@@ -23,28 +23,34 @@ export const schema= [
         }
     },
     {
-        title:"Description of Seating", 
+        title:"Description of Seating (Check all that apply.)",
         "properties": 
         {
             "Seating provides trunk stability":{type:"boolean",span:24},
             "Seating allows feet to be on floor or foot rest":{type:"boolean",span:24},
             "Seating facilitates readiness to perform task":{type:"boolean",span:24},
             "There are questions or concerns about the student's seating ":{type:"boolean",span:24},
-            "Student dislikes some positions": 
-            {type:"switch", "properties":
-                {
-                    question1: {type: "paragraph", span: 24, description: "Student dislikes some positions, often indicates discomfort in the following positions"},
-                    _:{type:"string",span:24, long:true},
-                    question2: {type: "paragraph", span: 24, description: "How is the discomfort communicated?"},
-                    _2:{type:"string",span:24, long:true},
-                }
-            },
+            // "Student dislikes some positions":
+            // {type:"switch", "properties":
+            //     {
+            //         question1: {type: "paragraph", span: 24, description: "Student dislikes some positions, often indicates discomfort in the following positions"},
+            //         _:{type:"string",span:24, long:true},
+            //         question2: {type: "paragraph", span: 24, description: "How is the discomfort communicated?"},
+            //         _2:{type:"string",span:24, long:true},
+            //     }
+            // },
+            "Student dislikes some positions, often indicates discomfort in the following positions":
+                {"type":"boolean string", span:24, multiple:["How is the discomfort communicated?", ""], multiLength: [0.575,0.425]},
             "Student has difficulty using table or desk":{type:"boolean",span:24},
             "There are concerns or questions about current wheelchair. ":{type:"boolean",span:24},
-            question1: {type: "paragraph", span: 24, description: "Student has difficulty achieving and maintaining head control, best position for head control is"},
-            _:{type:"string",span:24, long:true},
-            "Where are their hips?":{type:"string",span:24, long:true},
-            "Number of minutes student can maintain head control in this position":{"type":"string",span:24, "integer":true},
+            // question1: {type: "paragraph", span: 24, description: "Student has difficulty achieving and maintaining head control, best position for head control is"},
+            // _:{type:"string",span:24, long:true},
+            // "Where are their hips?":{type:"string",span:24, long:true},
+            "Student has difficulty achieving and maintaining head control, best position for head control is":
+                {"type":"boolean string", span:24, multiple:["Where are their hips?", ""], multiLength: [0.575,0.425]},
+
+            // "Number of minutes student can maintain head control in this position":{"type":"string",span:24, "integer":true},
+            "Can maintain head control for":{"type":"boolean string", span:24, after:"minutes in this position."}
         }
     },
     {

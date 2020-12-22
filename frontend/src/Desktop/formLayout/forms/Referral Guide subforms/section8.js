@@ -2,7 +2,7 @@
 
 export const schema= [
     {
-        title:"section1", 
+        title:"Difficulties Student Experiences Participating in Recreation and Leisure (Check all that apply.)",
         "properties": 
         {
             "Understanding cause and effect":{type:"boolean",span:12},"Following complex directions":{type:"boolean",span:12},
@@ -31,7 +31,7 @@ export const schema= [
         }
     },
     {
-        title:"Assistive Technology Tried", 
+        title:"Assistive Technology Tried (Check all that apply.)",
         "properties": 
         {
             "Toys adapted with Velcro®, magnets, handles etc.":{type:"boolean",span:24},

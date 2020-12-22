@@ -46,8 +46,9 @@ export const schema= [
         title:"Computer Use (Check all that apply.)", 
         "properties": 
         {
+            "The student has access to the following computer(s).":{type: 'paragraph', span: 24, description: "The student has access to the following computer(s)."},
             "Has never used a computer":{type:"boolean",span:8},"Uses computer at school":{type:"boolean",span:8},"Uses computer at home ":{type:"boolean",span:8},
-            "Uses computer for games":{type:"boolean",span:12},"Uses computer for word processing":{type:"boolean",span:12},
+            "Uses computer for games":{type:"boolean",span:8},"Uses computer for word processing":{type:"boolean",span:16},
             "Uses computer’s spell checker":{type:"boolean",span:24},
             "Uses computer for a variety of purposes, such as":{"type":"boolean string", span:24},
             "Has potential to use computer but has not used a computer because":{"type":"boolean string", span:24, is_TextArea:true},
@@ -59,7 +60,7 @@ export const schema= [
         {
             "PC":{type:"boolean",span:8},"Macintosh":{type:"boolean",span:8},"Other":{"type":"boolean string", span:8},
             "Desktop":{type:"boolean",span:8},"Laptop ":{type:"boolean",span:16},
-            "Location":{"type":"boolean string", span:24},
+            "Location":{"type":"string", span:24},
             "The student uses a computer ":{type:"select", span:13, options:["Rarely","Frequently","Daily for one or more subjects or periods","Every day, all day"]}
         }
     },

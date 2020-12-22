@@ -71,6 +71,10 @@ class StudentManagement extends React.Component {
     super(props);
     this.columns = [
       {
+        title: "No",
+        dataIndex: 'key',
+      },
+      {
         title: "Student's Name",
         dataIndex: 'student_name',
       },
@@ -100,7 +104,8 @@ class StudentManagement extends React.Component {
           
           return (this.state.dataSource.length >= 1 ? (
             <ButtonGroup>
-              <Button type="primary" onClick={()=>this.props.history.push(link)}>View Forms</Button>
+              {/*<Button type="primary" onClick={()=>this.props.history.push(link)}>View Forms</Button>*/}
+              <Button type="primary" onClick={()=>window.open(link, "_blank")}>View Forms</Button>
               {
                 record.owner_username === this.props.username?
                 <>
