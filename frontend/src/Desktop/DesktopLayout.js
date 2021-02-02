@@ -37,6 +37,7 @@ class DesktopLayout extends React.Component {
                 children = ( <TabManager {...this.props}/>)
 
             } else{
+                console.log(this.props);
                 children = (<StudentManagementPage {...this.props}/>)
                 window.onbeforeunload = undefined
             }

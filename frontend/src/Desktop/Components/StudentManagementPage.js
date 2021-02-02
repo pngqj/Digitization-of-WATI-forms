@@ -101,13 +101,15 @@ class StudentManagement extends React.Component {
           delete record.last_updated_date
           delete record.key
           const link = "/forms/" + EncryptString.encrypt(JSON.stringify(record))
+          // console.log(record);
+          // console.log(this.props);
           
           return (this.state.dataSource.length >= 1 ? (
             <ButtonGroup>
               {/*<Button type="primary" onClick={()=>this.props.history.push(link)}>View Forms</Button>*/}
               <Button type="primary" onClick={()=>window.open(link, "_blank")}>View Forms</Button>
               {
-                record.owner_username === this.props.username?
+                record.owner_username === this.props.username || this.props.studentList.includes(record)?
                 <>
                 <Button onClick={() => this.showModal(record, true)}>Edit</Button>
                 <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record)}>
