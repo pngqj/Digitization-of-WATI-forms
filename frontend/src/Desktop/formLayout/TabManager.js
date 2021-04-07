@@ -1,5 +1,9 @@
 import React from 'react';
-import { Tabs, Modal, notification, Checkbox, Button, Input, message, Popover, Tooltip, Upload } from 'antd';
+import { Tabs, Modal, notification, Checkbox, Button, Input, message, Popover, Tooltip, Upload} from 'antd';
+
+// Test
+import { Layout, Menu } from 'antd';
+
 import * as enlargeActions from '../../store/actions/enlarge';
 import * as actions from '../../store/actions/formdata';
 import { connect } from 'react-redux';
@@ -19,8 +23,10 @@ import CustomForm from './CustomForm';
 import ButtonGroup from 'antd/lib/button/button-group';
 import SharedToModel from './SharedToModel';
 import Axios from 'axios';
+// import SideBar from "./SidebarManager";
 
 const { TabPane } = Tabs;
+const { Header, Content, Footer, Sider } = Layout;
 
 class TabManager extends React.Component {    
     constructor(props) {
@@ -136,6 +142,11 @@ class TabManager extends React.Component {
       onEdit = (targetKey, action) => {
         this[action](targetKey);
       };
+
+      onSidebarSelect = ({item, key, keyPath, selectedKeys, domEvent}) =>{
+          console.log(key);
+          this.setState({activeKey: key});
+      }
 
       add = () => {
           this.setState({addTabModalVisible:true})
@@ -400,45 +411,65 @@ class TabManager extends React.Component {
                 visible={this.state.shareToModelVisible}
                 closeModel={()=>this.setState({shareToModelVisible:false})}>
             </SharedToModel>
+            <Layout hasSider={true}>
+                <Sider collapsible={true}
+                    style={{
+                        overflow: 'auto',
+                        height: '100vh',
+                        position: 'fixed',
+                        left: 0,
+                    }}
+                >
+                    <div className="logo" />
+                    <Menu theme="dark" mode="inline" onSelect={this.onSidebarSelect}>
+                        {this.state.panes.map(pane => (
+                            <Menu.Item key={pane.key}>
+                                {pane.title}
+                                {console.log(pane.content)}
+                            </Menu.Item>
+                        ))}
+                    </Menu>
+                </Sider>
+                {/*<SideBar panes={this.state.panes} active={this.state.activeKey}/>*/}
+                <Layout className="site-layout" style={{ marginLeft: 200 }}>
+                    <Tabs
+                        onChange={this.onChange}
+                        activeKey={this.state.activeKey}
+                        hideAdd
+                        type="editable-card"
+                        onEdit={this.onEdit}
+                        tabBarExtraContent={(
+                            <ButtonGroup>
+                                <Tooltip placement="topLeft" title="Add">
+                                    <Button onClick={this.add} style={{marginLeft:"2px", padding:0, height:"20px", width:"20px"}}>
+                                        <PlusOutlined type="edit" style={{fontSize:"12px", position: "absolute", top: "10%", left:"15%"}}></PlusOutlined>
+                                    </Button>
+                                </Tooltip>
+                                <Tooltip placement="topLeft" title="Save">
+                                    <Button onClick={()=>{
+                                        this.props.editFormdata(this.props.student_data, this.state.formData, this.state.activeKey, this.newTabIndex, this.state.fileToUploadList)
+                                        this.setState({leavingPrompt:false, fileToUploadList: []})
+                                    }}
+                                            style={{marginLeft:"2px", padding:0, height:"20px", width:"20px"}}>
+                                        <SaveOutlined type="edit" style={{fontSize:"12px", position: "absolute", top: "10%", left:"15%"}}></SaveOutlined>
+                                    </Button>
+                                </Tooltip>
 
-          <Tabs
-            onChange={this.onChange}
-            activeKey={this.state.activeKey}
-            hideAdd
-            type="editable-card"
-            onEdit={this.onEdit}
-            tabBarExtraContent={(
-              <ButtonGroup>
-                <Tooltip placement="topLeft" title="Add">
-                  <Button onClick={this.add} style={{marginLeft:"2px", padding:0, height:"20px", width:"20px"}}>
-                    <PlusOutlined type="edit" style={{fontSize:"12px", position: "absolute", top: "10%", left:"15%"}}></PlusOutlined>
-                  </Button>
-                </Tooltip>
-                <Tooltip placement="topLeft" title="Save">
-                  <Button onClick={()=>{
-                    this.props.editFormdata(this.props.student_data, this.state.formData, this.state.activeKey, this.newTabIndex, this.state.fileToUploadList)
-                    this.setState({leavingPrompt:false, fileToUploadList: []})
-                    }} 
-                    style={{marginLeft:"2px", padding:0, height:"20px", width:"20px"}}>
-                  <SaveOutlined type="edit" style={{fontSize:"12px", position: "absolute", top: "10%", left:"15%"}}></SaveOutlined>
-                  </Button>
-                </Tooltip>
-                
-                <Tooltip placement="topLeft" title="Edit">
-                  <Button onClick={this.showEditTabNameModel} style={{marginLeft:"2px", padding:0, height:"20px", width:"20px"}}>
-                    <EditOutlined type="edit" style={{fontSize:"12px", position: "absolute", top: "10%", left:"15%"}}></EditOutlined>
-                  </Button>
-                </Tooltip>
+                                <Tooltip placement="topLeft" title="Edit">
+                                    <Button onClick={this.showEditTabNameModel} style={{marginLeft:"2px", padding:0, height:"20px", width:"20px"}}>
+                                        <EditOutlined type="edit" style={{fontSize:"12px", position: "absolute", top: "10%", left:"15%"}}></EditOutlined>
+                                    </Button>
+                                </Tooltip>
 
-                {/* uncomment below for upload button */}
-                {/* <Tooltip placement="topLeft" title="Upload">
+                                {/* uncomment below for upload button */}
+                                {/* <Tooltip placement="topLeft" title="Upload">
                   <Button style={{marginLeft:"2px", padding:0, height:"20px", width:"20px"}}>
                     <label for="file-input" style={{marginLeft:"2px", padding:0, height:"20px", width:"20px"}}>
                       <UploadOutlined type="edit" style={{fontSize:"12px", position: "absolute", top: "10%", left:"15%"}}></UploadOutlined>
                     </label>
                   </Button>
                   <input id="file-input" style={{display: "none"}} type="file" accept="image/*"
-                    onClick={(event)=> { event.target.value = null}}                  
+                    onClick={(event)=> { event.target.value = null}}
                    onChange={(event) => {
                     let file = event.target.files[0]
                     if(this.state.filenamelist.includes(file.name)){
@@ -460,26 +491,30 @@ class TabManager extends React.Component {
                     this.setState({ panes, fileToUploadList, activeKey, formData, addTabModalVisible:false, selectedForms: [], leavingPrompt:true});
                   }}/>
                 </Tooltip> */}
-                
-                {
-                  this.props.is_owner_of_form?
-                  <Tooltip placement="topLeft" title="Share">
-                    <Button onClick={() => this.setState({shareToModelVisible:true})} style={{marginLeft:"2px", padding:0, height:"20px", width:"20px"}}>
-                      <ShareAltOutlined type="edit" style={{fontSize:"12px", position: "absolute", top: "10%", left:"15%"}}></ShareAltOutlined>
-                    </Button>
-                  </Tooltip>
-                  :
-                  ''
-                }
-              </ButtonGroup>
-            )}
-          >
-            {this.state.panes.map(pane => (
-              <TabPane tab={pane.title} key={pane.key} closable={pane.closable} forceRender={true} >
-                {pane.content}
-              </TabPane>
-            ))}
-          </Tabs>
+
+                                {
+                                    this.props.is_owner_of_form?
+                                        <Tooltip placement="topLeft" title="Share">
+                                            <Button onClick={() => this.setState({shareToModelVisible:true})} style={{marginLeft:"2px", padding:0, height:"20px", width:"20px"}}>
+                                                <ShareAltOutlined type="edit" style={{fontSize:"12px", position: "absolute", top: "10%", left:"15%"}}></ShareAltOutlined>
+                                            </Button>
+                                        </Tooltip>
+                                        :
+                                        ''
+                                }
+                            </ButtonGroup>
+                        )}
+                    >
+                        {this.state.panes.map(pane => (
+                            <TabPane tab={pane.title} key={pane.key} closable={pane.closable} forceRender={true} >
+                                {pane.content}
+                            </TabPane>
+                        ))}
+                    </Tabs>
+                </Layout>
+            </Layout>
+
+
         
         </div>
         );
