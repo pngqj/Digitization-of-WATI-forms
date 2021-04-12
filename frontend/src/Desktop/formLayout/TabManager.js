@@ -412,7 +412,7 @@ class TabManager extends React.Component {
                 closeModel={()=>this.setState({shareToModelVisible:false})}>
             </SharedToModel>
             <Layout hasSider={true}>
-                <Sider collapsible={true}
+                <Sider collapsible={true} collapsedWidth={20}
                     style={{
                         overflow: 'auto',
                         height: '100vh',
