@@ -20,7 +20,7 @@ if (!is_dev) {
     }})
 } else {
     // connect to test database for development mode. you can create your own development database at https://account.mongodb.com/account/login
-    mongo_URL = "mongodb+srv://aungheinhtoo:0092aung@mycluster.nlhm0.mongodb.net/test?retryWrites=true&w=majority"
+    mongo_URL = "connectionStr"
     // Gmail for develoment mode
     nodemailer_transporter = nodemailer.createTransport({
         service: 'gmail',
