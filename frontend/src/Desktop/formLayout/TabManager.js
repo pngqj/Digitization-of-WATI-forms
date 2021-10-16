@@ -412,19 +412,20 @@ class TabManager extends React.Component {
                 closeModel={()=>this.setState({shareToModelVisible:false})}>
             </SharedToModel>
             <Layout hasSider={true}>
-                <Sider collapsible={true} collapsedWidth={20}
+                {/* <Sider collapsible={true} collapsedWidth={20} */}
+                <Sider
                     style={{
-                        overflow: 'auto',
+                        overflow: 'scroll',
                         height: '100vh',
                         position: 'fixed',
                         left: 0,
                     }}
                 >
                     <div className="logo" />
-                    <Menu theme="dark" mode="inline" onSelect={this.onSidebarSelect}>
+                    <Menu theme="dark" mode="inline" onSelect={this.onSidebarSelect} selectedKeys={this.state.activeKey}>
                         {this.state.panes.map(pane => (
                             <Menu.Item key={pane.key}>
-                                {pane.title}
+                                {pane.title.replace("WATI Assistive Technology", "")}
                                 {console.log(pane.content)}
                             </Menu.Item>
                         ))}
